@@ -1,0 +1,114 @@
+\documentclass{physics_article_B}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+
+\graphicspath{{Graphics/}{\main/Graphics/}{Graphics/Images/}{\main/Graphics/Images/}}
+
+%\usepackage{amsmath}
+%\usepackage{graphicx}
+%\usepackage{hyperref}
+
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{graphicx,caption}
+\usepackage{subcaption}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{natbib}
+\usepackage{lmodern}
+\usepackage[superscript,biblabel]{cite}
+\usepackage{lipsum}
+
+
+\providecommand{\main}{.} 
+
+
+\title{Optical Absorption in Semiconductors}	
+\author{}								
+\date{April 22, 2016}
+
+\mytitle{Optical absorption in semiconductors}
+%\myname{}
+\studentid{4329769}
+\date{\today{}}
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{ID: 4329769}
+%\rhead{ID: 4329769}
+%\lhead{}
+\cfoot{\thepage}
+
+	
+
+
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+    \vspace*{0.5 cm}
+    \includegraphics[scale = 0.4]{uon.png}\\[1.0 cm]	% University Logo
+    \textsc{\LARGE University of Nottingham}\\[2.0 cm]	% University Name
+	\textsc{\Large Formal Report}\\[0.5 cm]				% Course Code
+	\textsc{\large Investigation B}\\[0.5 cm]				% Course Name
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{ \huge \bfseries \thetitle}\\
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+			
+			\theauthor
+			\end{flushleft}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+			\emph{Student Number:} \\
+			4232498									% Your Student Number
+		\end{flushright}
+	\end{minipage}\\[2 cm]
+	
+	{\large \thedate}\\[2 cm]
+ 
+	\vfill
+	
+\end{titlepage}
+
+\tableofcontents
+\pagebreak
+
+\begin{abstract}
+
+\emph{Abstact}
+
+\end{abstract}
+
+\section{Introduction \label{intro}}
+
+\section{Theory \label{theory}}
+
+\section{Experimental method \label{method}}
+
+\section{Results \label{results}}
+
+\section{Discussion of Results \label{discussion}}
+
+\section{Conclusions \label{conclusions}}
+
+\bibliographystyle{agsm}
+\bibliography{opticalbib}
+ 
+\end{document}
+
