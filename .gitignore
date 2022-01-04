@@ -2,6 +2,7 @@
 
 Report/Sources/
 .DS_Store
+Test Folder/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
