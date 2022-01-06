@@ -56,6 +56,10 @@ classdef OpticalAnalysisFunctions
                StraightLine(i) = section(1);
             end
         end
+
+        if StraightLine == []
+            disp('There is no clear straightline')
+        end
         end
 
         % Longest Consecutive straight line and index - UPDATED

@@ -1,12 +1,13 @@
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.io
 
-I02 = np.loadtxt('/Users/harold/Documents/Academia/Nottingham Uni/Year 2/Intermediate Experimental Physics (PHYS2005)/Experiments/Lab Reports/Optical Absorption of Semiconductors/MATLAB for optical/Alda MATLAB help/I02.mat')
-I3 = np.loadtxt('/Users/harold/Documents/Academia/Nottingham Uni/Year 2/Intermediate Experimental Physics (PHYS2005)/Experiments/Lab Reports/Optical Absorption of Semiconductors/MATLAB for optical/Alda MATLAB help/I3.mat')
-LambdaStore = np.loadtxt('/Users/harold/Documents/Academia/Nottingham Uni/Year 2/Intermediate Experimental Physics (PHYS2005)/Experiments/Lab Reports/Optical Absorption of Semiconductors/MATLAB for optical/Alda MATLAB help/lambda.mat')
-low_energies_alpha = np.loadtxt('/Users/harold/Documents/Academia/Nottingham Uni/Year 2/Intermediate Experimental Physics (PHYS2005)/Experiments/Lab Reports/Optical Absorption of Semiconductors/MATLAB for optical/Alda MATLAB help/low_energies_alpha.mat')
-high_energies_alpha = np.loadtxt('/Users/harold/Documents/Academia/Nottingham Uni/Year 2/Intermediate Experimental Physics (PHYS2005)/Experiments/Lab Reports/Optical Absorption of Semiconductors/MATLAB for optical/Alda MATLAB help/high_energies_alpha.mat')
+I02 = scipy.io.loadmat('I02.mat')['I02']
+I3 = scipy.io.loadmat('I3.mat')['I3']
+LambdaStore = scipy.io.loadmat('lambda.mat')['LambdaStore']
+low_energies_alpha = scipy.io.loadmat('low_energies_alpha.mat')['None'][0][3]
+high_energies_alpha = scipy.io.loadmat('high_energies_alpha.mat')['None'][0][3]
 # %% loads all the data for this experiment
 
 T_0 = abs(I3/I02) # whole data set of T recorded
@@ -59,7 +60,7 @@ rootalpha = -x**(-1)*np.log((((1 - R)**4 + 4*(T**2)*(R**2))**0.5 - (1 - R)**2)/(
 
 plt.figure()
 plt.plot(energy_ev,rootalpha,'*')
-pbs = predint(Alda_low_energy_alpha,energy_ev,0.68)
+#pbs = predint(Alda_low_energy_alpha,energy_ev,0.68)
 
 plt.plot(Alda_low_energy_alpha)
 
@@ -82,7 +83,7 @@ alphae = (rootalpha - alphaa)**(0.5)
 
 plt.figure()
 plt.plot(energy_ev,alphae,'*')
-pbs = predint(Alda_high_energies_alpha,energy_ev,0.68)
+#pbs = predint(Alda_high_energies_alpha,energy_ev,0.68)
 plt.plot(Alda_high_energies_alpha)
 plt.plot(energy_ev,pbs,'m--')
 plt.xlabel('Energy / eV')
@@ -120,3 +121,4 @@ plt.plot(E,rootalpha);
 # 6)
 # Eg=(x1+x2)./2;
 # Ep=(x2-x1)./2;
+# %%

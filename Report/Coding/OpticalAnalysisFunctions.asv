@@ -37,11 +37,17 @@ classdef OpticalAnalysisFunctions
         
         % Straight Line Values - Could be multiple sections
 
-        function StraightLine = DetectStraightLine(data)
-        data = smoothdata(data);
+        function StraightLine = DetectStraightLine(xdata, ydata)
+        
+        gradient(1) = ydata(1)./(xdata(1));
+        for i=2:size(xdata,2)-1
+            gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
+        end
+
+        gradient = smoothdata(gradient);
         StraightLine = [];
-        for i = 1:size(data,2)-1
-            section = data(i:i+1);
+        for i = 1:size(gradient,2)-1
+            section = gradient(i:i+1);
             p12 = section(1);
             p23 = section(2);
             per = p23*0.05;
@@ -49,6 +55,10 @@ classdef OpticalAnalysisFunctions
             if (p23-per <= p12) && (p12 <= p23+per)
                StraightLine(i) = section(1);
             end
+        end
+
+        if isempty(StraightLine) == 1
+            disp('There is no clear straightline')
         end
         end
 
@@ -77,8 +87,22 @@ classdef OpticalAnalysisFunctions
         end
         end
         
-        function StraightLineData = DetectLongestStarightLine(array)
-            anss = OpticalAnalysisFunctions.LongestConsecutive(array)
+        function [xdata, ydata] = DetectLongestStarightLine(xdata, ydata)
+
+            StraightLine = OpticalAnalysisFunctions.DetectStraightLine(xdata, ydata); % detects staright line sections
+
+            nonzero = find(StraightLine ~= 0); % finds nonstraight points from array
+            
+            %x_data_excess = x_data(nonzero); % removes nonstraight points from array
+            %y_data_excess = y_data(nonzero); % removes nonstraight points from array
+
+            [length, index] = OpticalAnalysisFunctions.LongestConsecutive(nonzero); % finds longest section + index
+            nonzero_corrected = nonzero(index-length+1:index); % corrects it by a factor of + 1
+            
+            xdata = xdata(nonzero_corrected);
+            ydata = ydata(nonzero_corrected);
+
+
         end
     end
 end

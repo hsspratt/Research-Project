@@ -7,7 +7,11 @@ import OpticalAnalysisFunctions.DetectLongestStarightLine
 
 % loads all the data from the experiment
 
-load('Data/Experimental/GaAs - Harry/Combined_As.mat')
+load('Data/Experimental/GaP - Alda/I02.mat')
+load('Data/Experimental/GaP - Alda/I3.mat')
+load('Data/Experimental/GaP - Alda/lambda.mat')
+load('Data/Experimental/GaP - Alda/low_energies_alpha.mat')
+load('Data/Experimental/GaP - Alda/high_energies_alpha.mat')
 
 % loads the refractive index info
 
