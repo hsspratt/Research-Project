@@ -1,5 +1,9 @@
 %% Optical Abosrption MATLAB code - Analysis
 
+import OpticalAnalysisFunctions.nearestRefraction
+import OpticalAnalysisFunctions.DetectStraightLine
+import OpticalAnalysisFunctions.LongestConsecutive
+
 % loads all the data from the experiment
 
 load('Data/Experimental/I02.mat')
@@ -10,90 +14,75 @@ load('Data/Experimental/high_energies_alpha.mat')
 
 % loads the refractive index info
 
-RefractiveIndex_GaAs = csvimport('Data/Refractive/RefractiveIndexGaAs.csv');
 RefractiveIndex_GaP = csvimport('Data/Refractive/RefractiveIndexGaP.csv'); 
-
-RefractiveIndex_GaAs(1,:) = []; % removing column titles
 RefractiveIndex_GaP(1,:)  = [];  % removing column titles
 
-RefractiveIndexInfo_GaAs = zeros(46,3);
 RefractiveIndexInfo_GaP  = zeros(46,3);
+
 for c=1:3
     for r=1:46
-        RefractiveIndexInfo_GaAs(r,c) = RefractiveIndex_GaAs{r,c};
         RefractiveIndexInfo_GaP(r,c)  = RefractiveIndex_GaP{r,c};
     end
 end
-
-L_As = RefractiveIndexInfo_GaAs(:,1).*1000;
-N_As = RefractiveIndexInfo_GaAs(:,2);
-K_As = RefractiveIndexInfo_GaAs(:,3);
 
 L_P  = RefractiveIndexInfo_GaP(:,1).*1000;
 N_P  = RefractiveIndexInfo_GaP(:,2);
 K_P  = RefractiveIndexInfo_GaP(:,3);
 
-plot(L_P,N_P)
+figure( 'Name', 'Refractive Index');
+
+plot(L_P,N_P) % real refractive index - n
 hold on
-plot(L_P,K_P)
+plot(L_P,K_P) % complex refracive index - ik
+
+title('Refractive Index $200 -- 830 nm$','Interpreter','latex');
+legend('Real refractive index','Complex refractive index','Interpreter','latex')
+
+xlabel( 'Wavelength $/nm$', 'Interpreter', 'latex' );
+ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
+
 hold off
 
 %nearestRefraction(L, Lambda, N);
 
-T_0 = abs(I3./I02);
-% whole data set of T recorded
-T = T_0(349:410);
-Lambda=LambdaStore(349:410);
-% confining T and lambda to regiojn of interest
-% also making sure they are the same size
+T_0 = abs(I3./I02); % whole data set of T recorded
+T = T_0(349:410); % confining T and lambda to regiojn of interest
+Lambda=LambdaStore(349:410); % also making sure they are the same size
 
-figure
+
+
+figure('Name','Transmission Coefficient vs Optical Wavelength GaP')
+
 plot(Lambda,T,'*')
-xlabel('Wavelength/nm')
-ylabel('Transmission Coefficient')
-title({'Transmission Coefficient vs Optical Wavelength taken on',
-    'Gallium Phosphide Sample'})
+
+xlabel('Wavelength /nm', 'Interpreter', 'latex')
+ylabel('Transmission Coefficient', 'Interpreter', 'latex')
+%title({'Transmission Coefficient vs Optical Wavelength - Gallium Phosphide'})
 hold off
 
 % btw i dont think they like titles in matlab graphs i think they prefder a
 % caption but just check in the formal report guide
-
-n_As = zeros(size(Lambda));
-k_As = zeros(size(Lambda));
-R_As = zeros(size(Lambda));
 
 n_P = zeros(size(Lambda));
 k_P = zeros(size(Lambda));
 R_P = zeros(size(Lambda));
 
 for i=1:size(Lambda,2)
-    n_As(i) = nearestRefraction(L_As, Lambda(i), N_As);
-    k_As(i) = nearestRefraction(L_As, Lambda(i), K_As);
-    
-    %n=3.1870;
-    % value of n quoted from [source]
-    % R(i) = ((n-1))/((n+1));
-    R_As(i) = ((n_As(i)-1)+k_As(i).^2)/((n_As(i)+1)+k_As(i).^2);
-
     % approximated value of R calculated
     % Are you not calculating R manually, or just using the estimate?
 
-    n_P(i) = nearestRefraction(L_P, Lambda(i), N_P);
-    k_P(i) = nearestRefraction(L_P, Lambda(i), K_P);
+    n_P(i) = OpticalAnalysisFunctions.nearestRefraction(L_P, Lambda(i), N_P);
+    k_P(i) = OpticalAnalysisFunctions.nearestRefraction(L_P, Lambda(i), K_P);
     R_P(i) = ((n_P(i)-1)+k_P(i).^2)/((n_P(i)+1)+k_P(i).^2);
+    % R_P(i) = ((n_P(i)-1))/((n_P(i)+1));
 end
 
 
-x = 0.408*10^-3;
-% thickness of sample
-xerr = 0.001*10^-3;
-% error on thickness
-h = 6.63*10^-34;
-% planks constant
-c = 2.99*10^8;
-% speed of light
-energy_ev = h*c./(Lambda.*10^-9*1.6*10^-19);
-% calculates the energy in eV for the respective wavelengths
+x = 0.408*10^-3; % thickness of sample
+xerr = 0.001*10^-3; % error on thickness
+h = 6.63*10^-34; % planks constant
+c = 2.99*10^8; % speed of light
+energy_ev = h*c./(Lambda.*10^-9*1.6*10^-19); % calculates the energy in eV for the respective wavelengths
 
 
 % for large wavelengths then extrapolate with curve fitting tool
@@ -113,16 +102,16 @@ R = R_P;
 
 rootalpha = -x^(-1).*log((((1 - R).^4 + 4.*(T.^2).*(R.^2)).^0.5 - (1 - R).^2)./(2.*T.*(R.^2)));
 
-figure
+figure('Name','Root Alpha vs Energy (ev)')
 plot(energy_ev,rootalpha,'*')
-pbs = predint(Alda_low_energy_alpha,energy_ev,0.68);
 hold on
 plot(Alda_low_energy_alpha)
 hold on
+pbs = predint(Alda_low_energy_alpha,energy_ev,0.68);
 plot(energy_ev,pbs,'m--')
-xlabel('Energy / eV')
-ylabel('Square root of alpha')
-legend('off')
+xlabel('Energy / eV', 'Interpreter', 'latex')
+ylabel('$\sqrt{\alpha}$', 'Interpreter', 'latex')
+legend('GaP data points','Line of best fit','$68\%$ prediction bounds', 'Interpreter', 'latex')
 hold off
 
 % plots rootalpha vs energy with line of best fit in low energy region
@@ -182,173 +171,9 @@ phonon = (B - A)/2 % phonon energy
 % %% 6)
 % Eg=(x1+x2)./2;
 % Ep=(x2-x1)./2;
+%% Huge Test
 
-%% Test
-g = []
-g(1) = T(1)./(Lambda(1));
-for i=2:size(Lambda,2)-1
-    g(i) = (T(i+1) - T(i))./(Lambda(i+1) - Lambda(i));
-end
-data = smoothdata(g);
-StraightLine = [];
-for i = 1:size(data,2)-1
-    section = data(i:i+1);
-    p12 = section(1);
-    p23 = section(2);
-    per = p23*0.05;
-
-    if (p23-per <= p12) && (p12 <= p23+per)
-       StraightLine(i) = section(1);
-    end
-end
-
-nonzero = find(StraightLine ~= 0);
-StraightLine = T(nonzero);
-LambdaStraightLine = Lambda(nonzero);
-plot(LambdaStraightLine, StraightLine, '*')
-hold off
-
-[length, index] = LongestConsecutive2(nonzero);
-nonzero_corrected = nonzero(index-length+1:index);
-StraightLine = T(nonzero_corrected);
-LambdaStraightLine = Lambda(nonzero_corrected);
-plot(LambdaStraightLine, StraightLine, '*')
-hold on
+[x,y] = OpticalAnalysisFunctions.DetectLongestStarightLine(Lambda, T)
 plot(Lambda, T)
-hold off
-
-% Functions
-% n = zeros(size(Lambda));
-% R = zeros(size(Lambda));
-% 
-% for i=1:size(Lambda,2)
-%     n(i) = nearestRefraction(L, Lambda(i), N);
-% end
-% 
-% plot(L,N)
-% hold on
-% plot(Lambda,n,'*')
-
-%Test 2
-array = [1,2,3,4,5,6,9,10,11,12,13,14,15,16,17,18,20];
-%[length, index] = LongestConsecutive(array);
-[length, index] = LongestConsecutive2(array);
-%% Functions
-
-% Refraction True Value
-
-function RefractionTrueValue = nearestRefraction(LambdaStore, Lambda, RefractionIndex)
-
-lambda_d = Lambda-LambdaStore;
-
-if isempty(find(lambda_d==0)) == 0
-    lowest=find(lambda_d==0);
-elseif isempty(find(lambda_d==0)) == 1
-    lowest=max(find(lambda_d>0));
-end
-
-highest=lowest+1;
-
-n_d = RefractionIndex(highest)- RefractionIndex(lowest);
-
-if n_d ~= 0
-    Lambda_Percentage = lambda_d(lowest)./(LambdaStore(highest)-LambdaStore(lowest));
-elseif n_d == 0
-    Lambda_Percentage = 0;
-end
-
-if n_d > 0
-    RefractionTrueValue = RefractionIndex(lowest) - (n_d).* Lambda_Percentage;
-elseif n_d < 0
-    RefractionTrueValue = RefractionIndex(lowest) + (n_d).* Lambda_Percentage;
-elseif n_d == 0
-    RefractionTrueValue = RefractionIndex(lowest);
-else 
-    disp('Error Alert')
-end
-end
-
-% Straight Line Values - Could be multiple sections
-
-function StraightLine = DetectStraightLine(data)
-data = smoothdata(data);
-StraightLine = [];
-for i = 1:size(data,2)
-    section = data(i:i+1);
-    p12 = section(i);
-    p23 = section(i+1);
-    per = p23*0.05;
-
-    if (p23-per <= p12) && (p12 <= p23+per)
-       StraightLine(i) = section(i);
-    end
-end
-end
-
-% Longest Consecutive straight line and index
-
-% function [LongestConsecutive, longestLengthIndex] = LongestConsecutive(X)
-% 
-% longestLength = 0
-% 
-% currLength = 1
-% size(X)
-% for i = 1:size(X,2)
-%     if i==1
-%         if X(i) == X(i + 1) - 1
-%                 currLength = currLength + 1                
-%                 longestLength = max(longestLength, currLength)   
-%         else
-%                 currLength = 1
-%         end
-% 
-%     elseif i==size(X,2)
-%         if X(i) == X(i - 1) + 1
-%             currLength = currLength + 1
-%             longestLength = max(longestLength, currLength)
-%         else
-%             currLength = 1
-%         end
-% 
-%     elseif X(i) == X(i - 1) + 1
-%         if X(i) == X(i + 1) - 1
-%             currLength = currLength + 1
-%             longestLength = max(longestLength, currLength)
-%         else
-%             currLength = 1
-%         end
-%     end
-%     i
-%     if longestLength > currLength
-%         longestLengthIndex = i
-%     end
-% 
-% end
-% LongestConsecutive = max(longestLength, currLength)
-% end
-
-% Longest Consecutive straight line and index - UPDATED
-
-function [LongestConsecutive, longestLengthIndex] = LongestConsecutive2(X)
-
-longestLength = 0;
-longestLengthIndex = [];
-
-currLength = 1;
-
-for i = 1:size(X,2)-1
-    if X(i+1) == X(i) + 1
-        currLength = currLength + 1;
-        longestLength = max(longestLength, currLength);
-    else
-        currLength = 1;
-        
-    end
-LongestConsecutive = max(longestLength, currLength);
-if currLength == longestLength
-    longestLengthIndex = i+1;
-end
-
-end
-end
-
+hold on
+plot(x, y, '*')
