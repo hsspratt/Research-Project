@@ -1,4 +1,4 @@
-function [fitresult, gof] = createFit(LambdaStraightLine, StraightLine)
+function [fitresult, gof] = createFit(xdata_line, ydata_line)
 %CREATEFIT(LAMBDASTRAIGHTLINE,STRAIGHTLINE)
 %  Create a fit.
 %
@@ -15,7 +15,7 @@ function [fitresult, gof] = createFit(LambdaStraightLine, StraightLine)
 
 
 %% Fit: 'Straight Line Best Fit'.
-[xData, yData] = prepareCurveData( LambdaStraightLine, StraightLine );
+[xData, yData] = prepareCurveData( xdata_line, ydata_line );
 
 % Set up fittype and options.
 ft = fittype( 'poly1' );

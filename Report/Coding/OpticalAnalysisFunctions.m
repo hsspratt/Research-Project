@@ -40,7 +40,7 @@ classdef OpticalAnalysisFunctions
         function StraightLine = DetectStraightLine(xdata, ydata)
         
         gradient(1) = ydata(1)./(xdata(1));
-        for i=2:size(xdata,2)-1
+        for i=1:max(size(xdata))-1
             gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
         end
 
@@ -103,6 +103,95 @@ classdef OpticalAnalysisFunctions
             ydata = ydata(nonzero_corrected);
 
 
+        end
+
+        function [Transparent_Wavelength, Transparent_T] = TransparentStraightLine(xdata, ydata)
+        
+        StraightLine = [];
+        for i=max(size(ydata)):-1:2
+            section = ydata(i:-1:i-1);
+            p3 = section(1);
+            p2 = section(2);
+            per = p3*0.01;
+        
+            rolling_average = mean(ydata(i:max(size(ydata))));
+        
+            if (rolling_average-per <= p2) && (p2 <= rolling_average+per)
+               StraightLine(i) = ydata(1);
+            end
+        end
+        
+        nonzero = find(StraightLine ~= 0);
+        [length, index] = OpticalAnalysisFunctions.LongestConsecutive(nonzero);
+        nonzero_corrected = nonzero(index-length+1:index);
+        Transparent_Wavelength = xdata(nonzero_corrected);
+        Transparent_T = ydata(nonzero_corrected);
+
+        end
+
+        function [Excess_Wavelength, Excess_T, wavelength, T, Index] = CutExcessData(xdata, ydata)
+        
+        StraightLine = [];
+        for i=1:1:max(size(ydata))-1
+            points = ydata(i:1:i+1);
+            p1 = points(1);
+            p2 = points(2);
+            %per = p1*2;
+            per = max(ydata)*(3.5/100);
+        
+            rolling_average = mean(ydata(1:i+1));
+        
+            if (rolling_average-per <= p2) && (p2 <= rolling_average+per)
+               StraightLine(i) = ydata(1);
+            end
+        end
+        
+        nonzero           = find(StraightLine ~= 0);
+        [length, index]   = OpticalAnalysisFunctions.LongestConsecutive(nonzero);
+        nonzero_corrected = nonzero(index-length+1:index);
+        Excess_Wavelength = xdata(nonzero_corrected);
+        Excess_T          = ydata(nonzero_corrected);
+
+        Index      = round(max(size(Excess_T))*0.90,0); % Threshold at 80%
+
+        wavelength = xdata(Index:1:end);
+        T          = ydata(Index:1:end);
+
+        end
+
+%         function [Excess_Wavelength, Excess_Alpha, wavelength, T, Index] = CutExcessDataAlpha(xdata, ydata)
+%         
+%         StraightLine = [];
+%         for i=max(size(ydata)):-1:2
+%             points = ydata(i:-1:i-1);
+%             p1 = points(1);
+%             p2 = points(2);
+%             %per = p1*2;
+%             per = sort(ydata);
+%             per = mean(per(round(max(size(ydata)),0)))
+%         
+%             rolling_average = mean(ydata(i:max(size(ydata))));
+%         
+%             if (rolling_average-per <= p2) && (p2 <= rolling_average+per)
+%                StraightLine(i) = ydata(1);
+%             end
+%         end
+%         
+%         nonzero           = find(StraightLine ~= 0);
+%         [length, index]   = OpticalAnalysisFunctions.LongestConsecutive(nonzero);
+%         nonzero_corrected = nonzero(index-length+1:index);
+%         Excess_Wavelength = xdata(nonzero_corrected);
+%         Excess_Alpha          = ydata(nonzero_corrected);
+% 
+%         Index      = round(max(size(Excess_Alpha))*0.75,0); % Threshold at 80%
+% 
+%         wavelength = xdata(Index:1:end);
+%         T          = ydata(Index:1:end);
+% 
+%         end
+
+        function AnalysisData = AutomatedAnalysis()
+            
         end
     end
 end
