@@ -73,41 +73,86 @@ T = T + abs(T_min);
 % meanInsideInterval = mean(T(2070:2255)) 
 % find average transmsission value on flat region at the end of the graph
 
+ydata = T;
+xdata = wavelength;
+
+gradient(1) = ydata(1)./(xdata(1));
+for i=2:max(size(xdata))-1
+    gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
+end
+
+gradient = smoothdata(gradient);
+StraightLine = [];
+for i=max(size(gradient)):-1:1
+    section = gradient(i:-1:i-1);
+    p32 = section(1);
+    p21 = section(2);
+    per = p23*0.07;
+
+    rolling_average = mean(g(i:max(size(gradient))))
+
+    if (p32-per <= p12) && (p12 <= p32+per)
+       StraightLine(i) = section(1);
+    end
+end
+
+for 
+
+end
+
+
+meanInsideInterval = mean(T(2070:2255)) 
+
 R = (1-meanInsideInterval)/(1+meanInsideInterval) % Value of R found via transmission graph
-R = (3.5160 - 1)^2 / (3.5160 + 1)^2  % Approximate value of R to check
+R = (3.5160 - 1)^2 / (3.5160 + 1)^2               % Approximate value of R to check
 
-x = 0.417.*10.^(-3);  % thickness of sample
-error = 0.001
-h = 6.62607004*10^(-34) ;
-% plancks constant
-c = 299792458;
-% speed of light
+x = 0.417.*10.^(-3);                               % thickness of sample
+x_err = 0.001;                                     % error on thickness of sample
+h = 6.62607004*10^(-34);                           % plancks constant
+c = 299792458;                                     % speed of light
+Joules_energy = (h*c)./(wavelength.*10.^(-9));     % calculates energy in joules
+eV_energy = Joules_energy./(1.602176634*10^(-19)); % converts joules to eV
 
-Joules_energy = (h*c)./(wavelength.*10.^(-9));
-% calculates energy in joules
-
-eV_energy = Joules_energy./(1.602176634*10^(-19));
-% converts joules to eV
-
-alpha_GaAs = -(x.^(-1)).*log((((1 - R).^4 + 4.*(T.^2).*(R.^2)).^0.5 - (1 - R).^2)./(2.*T.*(R.^2)));
 % calculate each alpha for each wavelength
+alpha_GaAs = -(x.^(-1)).*log((((1 - R).^4 + 4.*(T.^2).*(R.^2)).^0.5 - (1 - R).^2)./(2.*T.*(R.^2)));
 
-offset_As = min(alpha_GaAs)
-% finds alpha offset
+offset_As = min(alpha_GaAs);               % finds alpha offset
+offsetalpha = alpha_GaAs + abs(offset_As); % correct alpha offset so no negative values
+square_alpha = offsetalpha.^2;             % finds alpha squared
+square_alpha = smooth(square_alpha);       % smooths values
+Log_alpha_GaAs = log10(offsetalpha);       %log alpha
 
-offsetalpha = alpha_GaAs + abs(offset_As);
-% correct alpha offset so no negative values
+plot(wavelength,V0abs)
+hold on
+plot(wavelength,V1abs,'r')
+hold off
+xlabel('Wavelength (nm)','Interpreter','latex')
+ylabel('Volatage','Interpreter','latex')
+% plots V1 and V0 against wavelength
 
-square_alpha = offsetalpha.^2;
-% finds alpha squared
+plot(wavelength,T,'b')
+xlabel('Wavelength (nm)','Interpreter','latex')
+ylabel('Transmission Coefficient','Interpreter','latex')
+% plots T against wavelength
 
-squarealpha = smooth(square_alpha);
-% smooths values
+plot(eV_energy,Log_alpha_GaAs)
+xlabel('Optical Energy (eV)','Interpreter','latex')
+ylabel('Logaritm of Absorption Coefficient','Interpreter','latex')
+% plots log alpha vs energy
 
-Log_alpha_GaAs = log10(offsetalpha);
-%logs alpha
+plot(eV_energy,square_alpha)
+xlabel('Optical Energy (eV)','Interpreter','latex')
+ylabel('Absorption Coefficient Squared','Interpreter','latex')
+% plots alpha squared vs energy, the graph of interest
 
+plot(eV_energy(1:40:end),offsetalpha(1:40:end),'*')
+set(gca, 'YScale', 'log')
+hold on
+plot(eV_energy(1:30:1070),offsetalpha(1:30:1070),'r--')
+legend('experimental values', 'theoretical values')
+% plots theroetical vs experimental values
 
+%% end 
 
 
 figure('Name','Transmission Coefficient vs Optical Wavelength GaAs')

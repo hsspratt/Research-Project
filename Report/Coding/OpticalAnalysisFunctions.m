@@ -57,7 +57,7 @@ classdef OpticalAnalysisFunctions
             end
         end
 
-        if StraightLine == []
+        if isempty(StraightLine) == 1
             disp('There is no clear straightline')
         end
         end

@@ -73,6 +73,36 @@ T = T + abs(T_min);
 % meanInsideInterval = mean(T(2070:2255)) 
 % find average transmsission value on flat region at the end of the graph
 
+ydata = T;
+xdata = wavelength;
+
+gradient(1) = ydata(1)./(xdata(1));
+for i=2:max(size(xdata))-1
+    gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
+end
+
+gradient = smoothdata(gradient);
+StraightLine = [];
+for i=max(size(gradient)):-1:2
+    section = gradient(i:-1:i-1);
+    p32 = section(1);
+    p21 = section(2);
+    per = p21*0.07;
+
+    rolling_average = mean(gradient(i:max(size(gradient))));
+
+    if (rolling_average-per <= p21) && (p21 <= rolling_average+per)
+       StraightLine(i) = section(1);
+    end
+end
+
+nonzero = find(StraightLine ~= 0);
+[length, index] = OpticalAnalysisFunctions.LongestConsecutive(nonzero);
+nonzero_corrected = nonzero(index-length+1:index);
+wavelength = wavelength(nonzero_corrected);
+T = T(nonzero_corrected);
+plot(wavelength,T)
+
 meanInsideInterval = mean(T(2070:2255)) 
 
 R = (1-meanInsideInterval)/(1+meanInsideInterval) % Value of R found via transmission graph
