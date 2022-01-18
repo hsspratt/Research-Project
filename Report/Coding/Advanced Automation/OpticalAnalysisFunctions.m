@@ -37,7 +37,7 @@ classdef OpticalAnalysisFunctions
         
         % Straight Line Values - Could be multiple sections
 
-        function StraightLine = DetectStraightLine(xdata, ydata)
+        function StraightLine = DetectStraightLine(xdata, ydata, err)
         
         gradient(1) = ydata(1)./(xdata(1));
         for i=1:max(size(xdata))-1
@@ -50,8 +50,10 @@ classdef OpticalAnalysisFunctions
             section = gradient(i:i+1);
             p12 = section(1);
             p23 = section(2);
-            per = p23*0.05;
-        
+            %per = p23*err;
+            rolling_average = mean(gradient(1:i+1))
+            per = rolling_average*err;
+
             if (p23-per <= p12) && (p12 <= p23+per)
                StraightLine(i) = section(1);
             end
@@ -87,9 +89,9 @@ classdef OpticalAnalysisFunctions
         end
         end
         
-        function [xdata, ydata] = DetectLongestStarightLine(xdata, ydata)
+        function [xdata, ydata] = DetectLongestStarightLine(xdata, ydata, err)
 
-            StraightLine = OpticalAnalysisFunctions.DetectStraightLine(xdata, ydata); % detects staright line sections
+            StraightLine = OpticalAnalysisFunctions.DetectStraightLine(xdata, ydata, err); % detects staright line sections
 
             nonzero = find(StraightLine ~= 0); % finds nonstraight points from array
             
@@ -137,7 +139,7 @@ classdef OpticalAnalysisFunctions
             p1 = points(1);
             p2 = points(2);
             %per = p1*2;
-            per = max(ydata)*(3.5/100);
+            per = max(ydata)*(10/100);
         
             rolling_average = mean(ydata(1:i+1));
         
@@ -189,6 +191,41 @@ classdef OpticalAnalysisFunctions
 %         T          = ydata(Index:1:end);
 % 
 %         end
+
+        function StraightLine = DetectStraightLine1(xdata, ydata, err)
+        
+        gradient(1) = ydata(1)./(xdata(1));
+        for i=1:max(size(xdata))-1
+            gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
+        end
+
+        gradient = smoothdata(gradient);
+        min_gradient = (ydata(end) - ydata(1))/(xdata(end) - xdata(1));
+        
+        for i=1:max(size(gradient))
+            if gradient(i)<min_gradient
+                gradient(i)=[]
+            end
+        end
+ 
+        StraightLine = [];
+        for i = 1:size(gradient,2)-1
+            section = gradient(i:i+1);
+            p12 = section(1);
+            p23 = section(2);
+            %per = p23*err;
+            rolling_average = mean(gradient(1:i+1))
+            per = rolling_average*err;
+
+            if (p23-per <= p12) && (p12 <= p23+per)
+               StraightLine(i) = section(1);
+            end
+        end
+
+        if isempty(StraightLine) == 1
+            disp('There is no clear straightline')
+        end
+        end
 
         function AnalysisData = AutomatedAnalysis()
             

@@ -1,5 +1,6 @@
 %% Optical Abosrption MATLAB code - Analysis
 
+% import OpticalAnalysisFunctions
 import OpticalAnalysisFunctions.nearestRefraction
 import OpticalAnalysisFunctions.DetectStraightLine
 import OpticalAnalysisFunctions.LongestConsecutive
@@ -84,7 +85,7 @@ T_min = min(T).*1.005;
 T = T + abs(T_min);
 
 [Excess_Wavelength, Excess_T, wavelength, T, Index] = OpticalAnalysisFunctions.CutExcessData(wavelength, T);
-
+% 
 R_As = R_As(Index:1:end); % redifines for new range
 V0   = V0(Index:1:end);   % redifines for new range
 V1   = V1(Index:1:end);   % redifines for new range
@@ -113,36 +114,87 @@ h = 6.62607004*10^(-34);                           % plancks constant
 c = 299792458;                                     % speed of light
 Joules_energy = (h*c)./(wavelength.*10.^(-9));     % calculates energy in joules
 eV_energy = Joules_energy./(1.602176634*10^(-19)); % converts joules to eV
+eV_energy = flip(eV_energy);
 
 % calculate each alpha for each wavelength
 R=R_As;
 alpha_GaAs = -(x.^(-1)).*log((((1 - R).^4 + 4.*(T.^2).*(R.^2)).^0.5 - (1 - R).^2)./(2.*T.*(R.^2)));
+alpha_GaAs = flip(alpha_GaAs);
+
+[Excess_eV_energy, Excess_alpha_GaAs, eV_energy, alpha_GaAs, Index] = OpticalAnalysisFunctions.CutExcessData(eV_energy, alpha_GaAs);
+wavelength = wavelength(Index:1:end)
+V0   = V0(Index:1:end);   % redifines for new range
+V1   = V1(Index:1:end);   % redifines for new range
+T = T(Index:1:end);
 
 offset_As = min(alpha_GaAs);               % finds alpha offset
 offsetalpha = alpha_GaAs + abs(offset_As); % correct alpha offset so no negative values
+
+[xdata, ydata] = OpticalAnalysisFunctions.DetectLongestStarightLine(eV_energy, offsetalpha, 0.07);
+figure('Name', 'StraightLine alpha vs eV')
+plot(xdata,ydata,'*')
+hold on
+plot(eV_energy, offsetalpha)
 
 %[Excess_Wavelength_alpha, Excess_alpha, wavelength_alpha, offsetalpha, Index] = OpticalAnalysisFunctions.CutExcessDataAlpha(wavelength, offsetalpha);
 % 
 %StraightLine = OpticalAnalysisFunctions.DetectStraightLine(flip(eV_energy), flip(offsetalpha))
 %Joules_energy = (h*c)./(wavelength_alpha.*10.^(-9));     % calculates energy in joules
 %eV_energy = Joules_energy./(1.602176634*10^(-19)); % converts joules to eV
+xdata = wavelength;
+ydata = offsetalpha;
+err = 0.05;
 
-gradient(1) = offsetalpha(1)./(wavelength(1));
-for i=1:max(size(wavelength))-1
-    gradient(i) = (offsetalpha(i+1) - offsetalpha(i))./(wavelength(i+1) - wavelength(i));
+gradient(1) = ydata(1)./(xdata(1));
+for i=1:max(size(xdata))-1
+    gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
 end
 
 gradient = smoothdata(gradient);
+min_gradient = (ydata(end) - ydata(1))/(xdata(end) - xdata(1));
+
+for i=1:max(size(gradient))
+    if gradient(i)<min_gradient
+        gradient(i)=0;
+    end
+end
+
 StraightLine = [];
 for i = 1:size(gradient,2)-1
     section = gradient(i:i+1);
     p12 = section(1);
     p23 = section(2);
-    per = p23*0.05;
+    %per = p23*err;
+    rolling_average = mean(gradient(1:i+1));
+    per = rolling_average*err;
 
-    if (p23-per <= p12) && (p12 <= p23+per)
+    if (p23-per <= p12) && (p12 <= p23+per) && (gradient(i)~=0)
        StraightLine(i) = section(1);
     end
+end
+
+if isempty(StraightLine) == 1
+    disp('There is no clear straightline')
+end
+
+
+% gradient(1) = offsetalpha(1)./(wavelength(1));
+% for i=1:max(size(wavelength))-1
+%     gradient(i) = (offsetalpha(i+1) - offsetalpha(i))./(wavelength(i+1) - wavelength(i));
+% end
+% 
+% gradient = smoothdata(gradient);
+% StraightLine = [];
+% for i = 1:size(gradient,2)-1
+%     section = gradient(i:i+1);
+%     p12 = section(1);
+%     p23 = section(2);
+%     per = p23*0.05;
+% 
+%     if (p23-per <= p12) && (p12 <= p23+per)
+%        StraightLine(i) = section(1);
+%     end
+% end
 
 figure('Name', 'Title')
 %plot(eV_energy(1:end),offsetalpha(1:end))
