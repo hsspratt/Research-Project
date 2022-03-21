@@ -1,0 +1,149 @@
+%\documentclass{physics_article_B}
+\documentclass{article}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{graphicx,caption}
+\usepackage{subcaption}
+\usepackage{pdfpages}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{bm}
+\usepackage{url}
+\usepackage{hyperref}
+
+\usepackage[backend=bibtex,style=numeric,natbib=true]{biblatex} %added
+%\bibliographystyle{ieeetr}
+\addbibresource{bib.bib}
+
+\usepackage[top=2cm,
+			bottom = 2cm,
+			left = 3cm,
+			right = 3cm]{geometry}
+\usepackage{pgfgantt}
+%\usepackage{xcolor}
+\usepackage{multirow}
+
+\usepackage{tikz}
+\tikzset{near start abs/.style={xshift=1cm}}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\usetikzlibrary{arrows.meta,quotes}
+\usepackage{pgfplots}
+\usetikzlibrary {datavisualization.formats.functions}
+\usetikzlibrary{arrows,scopes}
+
+\usepackage[table]{colortbl}% http://ctan.org/pkg/xcolor
+
+%\usetikzlibrary{positioning}
+
+\ganttset{group/.append style={orange},
+milestone/.append style={red},
+progress label node anchor/.append style={text=red}}
+
+\date{}
+
+\title{Automated Optical Absorption in Semiconductors}
+
+%\usepackage[superscript,biblabel]{cite}
+
+\begin{document}
+
+\maketitle
+
+
+The optical absorption of semiconductors to determine their band gap is a well documented field. The earliest papers date as far back as 1952 and many still form the basis for academic papers written in this field today. This is because the band gap energy is a critical feature in the use of semiconductors and it is essential that this energy is known for the purpose of applications. Experimentally calculating the band gap can be time-consuming and sometimes technical in nature. This experiment introduces a novel method for automating the calculation of the band gap for a given semiconductor. This novel method will differ from the typical method of calculating the band gap by removing the need for a lock in amplifier and instead simply measuring the transmission intensity of light through the sample. This method therefore removes the complexities associated with a lock in amplifier, which adds complications to the experiment and requires extra equipment. This method will be objectively a little less accurate but it will have the benefit of speeding up the process while increasing the simplicity, making it a valuable method when lots of samples need the band gap calculated. 
+
+\
+
+The physics of semiconductors is inherently determined by the physics of electrons and how they reside in the solid (semiconductor). In a solid, due to quantum mechanics, only certain energy levels can be occupied. These energy levels give rise to bands in the material. In between these bands there are forbidden regions where no electrons are allowed to reside. The difference between these different energy bands are called band gaps. \cite{luis} The allowed energies will be unique to the material, and contain many band gaps but the band gap which we will investigate is that near the fermi level, between the valence and conduction bands. This band gap is the most useful for semiconductor physics as it determines how a material will behave. Within this band gap of an ideal semiconductor will lie the fermi level, which is the highest energy which an electron can reside at absolute zero. In an ideal semiconductor, no electrons can reside in the band gap, so despite the fermi level being between the two bands the highest occupied state would be the valance band. As this experiment is not done at absolute zero, the probability of electrons occupying a given energy state will be dictated by the fermi probability. This results in, for this experiment, the possibility of some electrons residing in the conduction band. \cite{simpson} There are two main types of semiconductors, direct and indirect band gap. In a direct band gap semiconductor the conduction and valence band are in the same momentum space whereas in an indirect band gap the bands are separated by some k.
+
+\
+
+ If an incoming photon possesses an energy equal to, or greater than the band gap, the photon may promote an electron from the valance band to the conduction band. This process is known as absorption. Absorption $(\alpha)$ is simply defined by the rate of change of loss of light intensity. In this experiment direct band gaps materials will be explored first (in our case, GaAs), and if time allows, indirect band gap materials. The experiment will measure the intensity of light which has made it through the semiconductor, which will be directly affected by the absorption mechanisms referred to above. From this intensity, which will be recorded in the form of a voltage from a photodetector, a voltage wavelength graph can be plotted. Similar to that of a Tauc plot, the straight-line region of the graph will produce a line of best fit, whose $x$ intercept will produce a value for the bad gap. 
+
+\
+%\begin{figure}
+%\begin{center}    
+%    \begin{tikzpicture}[auto, > = Straight Barb, samples = 51, scale=0.5]
+%	\draw[<-,semithick] (0,3.5) -- (0,-3.7) node[anchor=west, pos=0] {$\epsilon$} ; % y axis
+%	\draw[->, semithick] (-3.5,-3.5) -- (3.5,-3.5) node[anchor=west, pos=1] {$k$} ; % x axis
+%	\draw[-, semithick]   plot [domain=-2:2] (\x, {+1+0.5*(\x)^2});
+%	\draw[-, semithick]   plot [domain=-3:3] (\x, {-1-0.25*(\x)^2}); 
+%	\draw [fill=white] (1,{-1-0.25*(1)^2}) circle (1pt);
+%	\draw [fill=black] (1,{+1+0.5*(1)^2}) circle (1pt);
+%	\draw[dashed] (0,1) -- (-1,1) node[anchor=east] {$E_{Cmin}$};
+%	\draw[dashed] (0,-1) -- (-1,-1) node[anchor=east] {$E_{Vmax}$};
+%	\draw[<->, thick] (-0.5,-0.9) -- (-0.5,0.9) node[anchor=east, midway] {$E_{g}$};
+%	\draw[dashed] (1,{+1+0.5*(1)^2}) -- (2,{+1+0.5*(1)^2}) node[anchor=west] {$E_{f}$};
+%	\draw[dashed] (1,{-1-0.25*(1)^2}) -- (2,{-1-0.25*(1)^2}) node[anchor=west] {$E_{i}$};
+%	\draw (1,{-1-0.25*(0.85)^2}) coordinate (p1) node[]{};
+%	\draw (1,{+1+0.5*(0.9)^2}) coordinate (p2) node[]{};
+%	%\draw[<->]  (1,{-1-0.25*(0.9)^2}) to ["{1}"]((1,{1+0.5*(0.9)^2});
+%	\draw[<->]  (p1) -- (p2) node[anchor=west, midway]{$hv$};
+%	\end{tikzpicture}
+%	\qquad % <----------------- SPACE BETWEEN PICTURES
+%	\begin{tikzpicture}[auto, > = Straight Barb, samples = 51,
+%declare function={ conduction(\x) = +1+0.75*(\x - 3)^2;
+%				   valence(\x)    = -1-0.25*(\x)^2;
+%				  }, scale=0.5]
+%	\draw[<-,semithick] (0,3.5) -- (0,-3.7) node[anchor=west, pos=0] {$\epsilon$} ; % y axis
+%	\draw[->, semithick] (-3.5,-3.5) -- (5,-3.5) node[anchor=west, pos=1] {$k$} ; % x axis
+%	\draw[-, semithick]   plot [domain=1.2:4.8] (\x, {conduction(\x)});
+%	\draw[-, semithick]   plot [domain=-3:3] (\x, {valence{\x}}); 
+%	\draw [fill=black] (3,{conduction(3)}) circle (2pt);
+%	\draw [fill=white] (1,{valence(1)}) circle (2pt);
+%	\draw[dashed] (0,1) -- (-1,1) node[anchor=east] {$E_{Cmin}$};
+%	\draw[dashed] (0,-1) -- (-1,-1) node[anchor=east] {$E_{Vmax}$};
+%	\draw[<->, thick] (-0.5,-0.9) -- (-0.5,0.9) node[anchor=east, midway] {$E_{g}$};
+%	
+%	\draw[dashed] (3,{conduction(3)}) -- (4,{conduction(3)}) node[anchor=west] {$E_{f}$};
+%	\draw[dashed] (1,{valence(1)}) -- (2,{valence(1)}) node[anchor=west] {$E_{i}$};
+%	\draw (1,{conduction(0.9)}) coordinate (p1) node[]{};
+%	\draw (1,{valence(0.85)}) coordinate (p2) node[]{};
+%	
+%	\draw[->,thick, shorten <=3pt, shorten >=3pt] (1,{valence(1)}) -- (1, 2.5) node [midway, above, sloped] (photon-node) {\tiny photon};
+%	\draw[->,thick, shorten <=3pt, shorten >=1pt] (1, 2.5) -- (2.9, {conduction(3.3)}) node [midway, below, sloped] (phonon-a-node) {\tiny phonon};
+%	\end{tikzpicture}
+%	\qquad % <----------------- SPACE BETWEEN PICTURES
+%	\begin{tikzpicture}[auto, > = Straight Barb, samples = 51,
+%declare function={ conduction(\x) = +1+0.75*(\x - 3)^2;
+%				   valence(\x)    = -1-0.25*(\x)^2;
+%				  },scale=0.5]
+%	\draw[<-,semithick] (0,3.5) -- (0,-3.7) node[anchor=west, pos=0] {$\epsilon$} ; % y axis
+%	\draw[->, semithick] (-3.5,-3.5) -- (5,-3.5) node[anchor=west, pos=1] {$k$} ; % x axis
+%	\draw[-, semithick]   plot [domain=1.2:4.8] (\x, {conduction(\x)});
+%	\draw[-, semithick]   plot [domain=-3:3] (\x, {valence{\x}}); 
+%	\draw [fill=black] (3,{conduction(3)}) circle (2pt);
+%	\draw [fill=white] (1,{valence(1)}) circle (2pt);
+%	\draw[dashed] (0,1) -- (-1,1) node[anchor=east] {$E_{Cmin}$};
+%	\draw[dashed] (0,-1) -- (-1,-1) node[anchor=east] {$E_{Vmax}$};
+%	\draw[<->, thick] (-0.5,-0.9) -- (-0.5,0.9) node[anchor=east, midway] {$E_{g}$};
+%	\draw[dashed, shorten <=5pt] (3,{conduction(3)}) -- (4,{conduction(3)}) node[anchor=west] {$E_{f}$};
+%	\draw[dashed, shorten <=5pt] (1,{valence(1)}) -- (2,{valence(1)}) node[anchor=west] {$E_{i}$};
+%	\draw (1,{conduction(0.9)}) coordinate (p1) node[]{};
+%	\draw (1,{valence(0.85)}) coordinate (p2) node[]{};
+%	\draw[->,thick, shorten <=3pt, shorten >=1pt] (1,{valence(1)}) -- (1, 0.5) node [midway, above, sloped] (photon-node) {\tiny photon};
+%	\draw[->,thick, shorten <=1pt, shorten >=3pt] (1, 0.5) -- (2.9, {conduction(3)}) node [midway, below, sloped] (phonon-e-node) {\tiny photon};
+%	\end{tikzpicture}
+%
+%	\end{center}
+%    \caption{(a) Direct band gap (b) Indirect -- phonon absorption (c) Indirect -- phonon emission}
+%    \label{fig:absorption}
+%\end{figure}
+
+The current literature on this subject contains a multitude of techniques by which the band gap can be calculated, from experimental techniques similar to that of this experiment, to advanced machine algorithms which can predict the band gap. A common method by which the band gap is shown by \citeauthor{martil1992undergraduate} \cite{martil1992undergraduate}. This is the same method used for undergraduate experiments regarding optical absorption in labs and involves using the transmission measurements to calculate a value for the absorption. This method, although still an undergraduate level method, has a level of complexity relating to the use of the lock in. This complexity in the experimental set up adds a degree of accuracy but at the cost of added time in the setting up and running of the experiment. Another simple method by which the band gap can be calculated is by that of the characteristic of a p--n junction as shown by \citeauthor{Kirkup1986UndergraduateED} \cite{Kirkup1986UndergraduateED}. This method measures the voltage difference across the junction and uses this value to calculate the energy gap using an approximation with $E_g(T) = E_g(0) - aT$. This method however has the drawback of having an innate temperature dependence, as a current is being passed directly though the semiconductor, its temperature will rise. This leads to added complications with the experiment and the analysis. This temperature dependence issue is not something that our experiment has as our samples  will stay at a constant temperature throughout the experiment. Another simple method is described by \citeauthor{shimadzu} \cite{shimadzu}. In this case, the band gap is determined by means of looking at the diffuse reflectance spectra. 
+
+\
+
+The experiments mentioned thus far are well documented methods of determining the band gap; the techniques having been around since the beginning of optical absorption experiments. In relation to state of the art experimental methods for calculating the band gap, work done by \citeauthor{SCHWARTING201743} \cite{SCHWARTING201743} is a prime example. In that experiment the authors used automated algorithms to determine band gaps from optical absorption spectra. For the experiment  "\textit{The best algorithm determined the band gap with an accuracy of 0.37 eV for direct- and 0.93 eV for indirect band gaps}"  \cite{SCHWARTING201743}. This demonstrates the progress that has been made in terms of automating the process used to calculate the band gap such that techniques can be used to calculate the band gap without an experiment. Another impressive technique for calculating the band gap is shown by \citeauthor{predict} \cite{predict}. This is possibly the most impressive in terms of complexity and uses in the field if perfected. The technique involved a machine learning model being developed which could accurately predict the band gap of inorganic solids based only on composition. Not only does it accurately predict the band gap for any composition but it is also versatile with the range of compositions it can predict and the speed at which it can do so. Therefore it would be an exceptionally useful resource predict the band gap of new compositions prior to experimentally calculating it. 
+
+\
+
+As shown by the experiments above, there is a plethora of ways to calculate the band gap energy, which range in complexity. In our experiment we are aiming to create an automated data collection system such that the experiment can automatically calculate the transmission for each wavelength. This is in stark comparison to one of the first optical absorption experiments conducted by \citeauthor{first} \cite{first}, this method though being very time consuming. So while not as complex as computational methods our experiment will aim to be streamlined process which will will enable the calculation of the band gap as quickly as possible. In essence our experiment  will therefore be most similar to the work conducted by \citeauthor{martil1992undergraduate}, but, slightly simpler and therefore quicker by removing the lock in amplifier. A compromise for a quicker experiment will be the accuracy of the results themselves, but we hope to minimise these as much as possible. Moreover the point of this experiment is not to get the most accurate results, as to which other experimental setups would be preferable, but to quickly and easily test the band gaps. This is especially useful when a wide range and large quantity of semiconductors are being tested where a good idea but not supremely accurate calculation of the band gap is needed. For instance, when band gap engineering is in use \cite{Bao2015}, in which just a rough estimation is needed to be calculated to test what the band gap currently is and whether more semiconductor layers need to be added to further change and tailor the band gap.
+
+\newpage
+\printbibliography
+
+\end{document}
+

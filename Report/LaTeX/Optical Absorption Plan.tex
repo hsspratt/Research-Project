@@ -1,0 +1,219 @@
+%\documentclass{physics_article_B}
+\documentclass{article}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{graphicx,caption}
+\usepackage{subcaption}
+\usepackage{pdfpages}
+\usepackage{mwe}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{url}
+\bibliographystyle{ieeetr}
+
+\usepackage[top=2cm,
+			bottom = 2cm,
+			left = 3cm,
+			right = 3cm]{geometry}
+\usepackage{pgfgantt}
+\usepackage{graphicx}
+%\usepackage{xcolor}
+\usepackage{multirow}
+
+\usepackage[table]{colortbl}% http://ctan.org/pkg/xcolor
+
+%\usetikzlibrary{positioning}
+
+\ganttset{group/.append style={orange},
+milestone/.append style={red},
+progress label node anchor/.append style={text=red}}
+
+%\title{Automated Optical Absoprtion System}
+%% Title
+%\author{Jake Hurley}								% Author
+%\date{\today}											% Date
+%
+%\mytitle{Optical absorption in semiconductors}
+%%\myname{}
+%\studentid{14334056}
+%\date{\today{}}
+
+%\makeatletter
+%\let\thetitle\@title
+%\let\theauthor\@author
+%\let\thedate\@date
+%\makeatother
+%
+%\pagestyle{fancy}
+%\fancyhf{}
+%\rhead{ID:14334056}
+%\lhead{\thetitle}
+%\cfoot{\thepage}
+
+\date{15th January 2022}
+
+\title{Automated Optical Absorption in Semiconductors}
+
+
+\usepackage[superscript,biblabel]{cite}
+
+\begin{document}
+
+\maketitle
+
+%\begin{titlepage}
+%	\centering
+%    \vspace*{0.5 cm}
+%    %\includegraphics[scale = 0.4]{uon.png}\\[1.0 cm]	% University Logo
+%    \textsc{\LARGE University of Nottingham}\\[2.0 cm]	% University Name
+%	\textsc{\Large Project Plan}\\[0.5 cm]				% Course Code
+%			% Course Name
+%	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+%	{ \huge \bfseries \thetitle}\\
+%	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+%	
+%	\begin{minipage}{0.4\textwidth}
+%		\begin{flushleft} \large
+%			
+%			\theauthor
+%			\end{flushleft}
+%			\end{minipage}~
+%			\begin{minipage}{0.4\textwidth}
+%			\begin{flushright} \large
+%			\emph{Student Number:} \\
+%			14334056									% Your Student Number
+%		\end{flushright}
+%	\end{minipage}\\[2 cm]
+%	
+%	{\large \thedate}\\[2 cm]
+% 
+%	\vfill
+%
+%%\begin{abstract}
+%%\emph{Topological insulators are electronic materials that have a bulk band gap like a regular insulator, whilst being electrically or optically conductive at the surface. The conducting states on their edge are the consequence of spin-orbit interactions and time reversal symmetry. The article initially discusses elementary topology, then defines topological insulators explaining the choice of name. Next the quantum Hall and quantum spin Hall effect are covered to build the theoretical foundations of topological insulators. Finally, the first experimentally discovered two dimensional topological insulator is discussed.}
+%%\end{abstract}	
+%	
+%\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Objectives}
+
+The objective of this project is to automate the data collection for the purpose of calculating the band gap of a given semiconductor. This entails creating an automated process to measure the voltage for each wavelength and plotting the outputted data to find the band gap. 
+
+% Need to include a Gantt chart. 
+% Need to include costing but unsure where that goes.
+
+\section*{Work Packages}
+
+The first work package for this project is to conduct background research into optical absorption in semiconductors. This research will further our understanding of the topic and form the basis for the background and literature review which has to be submitted by the 21st January 2022. 
+
+\
+
+After completion the next step will be to acquire an appropriate photo detector for our automated system. It is essential to pick a detector that is photo sensitive in the wavelength range we intend to use. We will choose a detector that is photo senstitive in the region which the semidonctors band gap we intend to investigate lie. We will communicate with the lab technician to establish what the most applicable detector is for this experiment and whether it needs to be bought or if there is already a suitable one. If an appropriate photo detector is not available, we will need to purchase one. This can be in the order of \pounds 1000. Such an applicable detector could be, for example, InGaAs Avalanche Photodetector.
+
+%This work will be carried out by one individual who will also serve as the liaison with the lab technician for purchasing the selected detector.
+
+
+%Next the semiconducting materials require prepping. This involves acquiring the 
+\
+% ask Mohamed about what type of samples we will be using. Will they require mounting etc.
+
+
+%The experiment will then be subsequently set up. The PC requires connecting to the monochromator to control the output wavelength incident on the sample. The PC will also require connecting to the photo detector to input the optical data..... %talk about aligning the photodetector to receive photons. talk about what else needs physically setting up or aligning
+
+
+% Develop (MATLAB), code to acquire and analyse the data reaped from the photodetector... %defo one for hazza
+
+
+The experimental hardware and equipment will then be set up. A tungsten light source will be used in conjunction with a monochromator to supply a light source of a single known wavelength. The monochromator will be connected to a computer via an LED card. The computer will run a python file which, when connected with the step motor on the monochromator, allows the wavelength to be changed automatically at specified steps. This will then passed through a long-pass filter. A silicon photo-detector will receive the light and produced a voltage. This will also be connected to the computer so that the results can be automated. Thus far the hardware and equipment are standard and not dependent on the semiconductor. The line gratings of each semiconductor will change but to start off, for GaAs, a 1200-line grating blazed at 800nm will be used. After all the equipment is in place the apparatus will be aligned by centring the light beam on the photodiode surface; this is to ensure that the highest intensity achievable reaches the detector.
+
+\
+
+Another key aspect of the experiment is the python code. This code will be written such that the data acquisition can be automated. The code will work work such that the wavelength of the stepper motor can be incrementally changed automatically. The objective willb be to enable the user to input an initial and final values for the wavelength . Then a UI window will prompt the user to start the motor for the given wavelength. Once the desired wavelength is reached the code will automatically stop and all the variables saved.
+
+\
+
+With the automated python data acquisition script made, the next step of the experiment will be to start acquiring data for our semiconductor sample. The initial sample we will use is GaAs, a direct band gap semiconductor. This was chosen as it is a simple semiconductor and therefore has simple excitation modes. As such, no extra analysis will be needed to account for phonon energies. Another reason why this has been chosen, is that it is a well documented semiconductor and therefore has well established constants such as the band-gap energy which we can compare to, to prove that our method works. 
+
+\
+
+At the same time the data acquisition of the GaAs sample takes place, a MATLAB data analysis script will be written. This script should produce a plot of the voltage against the photons energy, from which the band gap can be calculated. The code will require a small amount of human input when the curve fitting toolbox is used, where the correct points for the straight-line region (on the voltage energy graph) will be selected . But, other than that, the process will be automated.  
+
+\
+
+If time allows and the GaAs data acquisition and analysis runs smoothly, the aim is to move onto a more complex sample such as GaP, which is an indirect bad-gap semiconductor. GaP will be a more challenging semiconductor as the energy of the phonons as well as the energy of the photons will need to be accounted for, therefore leading to a more complex data analysis. If this stage is reached the MATLAB data analysis code will have to be expanded to allow for analysis of this type of semiconductor. 
+
+\ 
+
+The drafting of the report for this project will be done cocurrently with the data aquision and coding. This aspect will be conducted till the report is handed in on the 25th May.
+
+\section*{Milestones \& timings}
+	
+\begin{ganttchart}[
+    vgrid,
+	hgrid,
+	y unit title=0.6cm,
+    y unit chart=0.65cm,
+    %bar height=1,
+    title height=1,
+	title label font=\bfseries\footnotesize,
+    bar/.style={fill=blue}]{1}{21}
+	\gantttitle{Milestones}{21} \\
+	\gantttitle{16}{1} 
+	\gantttitle{17}{1} 
+	\gantttitle{18}{1} 
+	\gantttitle{19}{1} 
+	\gantttitle{20}{1} 
+	\gantttitle{21}{1} 
+	\gantttitle{22}{1} 
+	\gantttitle{23}{1} 
+	\gantttitle{24}{1} 
+	\gantttitle{25}{1} 
+	\gantttitle{26}{1} 
+	\gantttitle{27}{1} 
+	\gantttitle{28}{1} 
+	\gantttitle{29}{1} 
+	\gantttitle{30}{1} 
+	\gantttitle{31}{1} 
+	\gantttitle{32}{1} 
+	\gantttitle{33}{1} 
+	\gantttitle{34}{1} 
+	\gantttitle{35}{1} 
+	\gantttitle{36}{1} \\
+
+
+	\ganttbar[bar/.style={fill=blue}]{Backround Research}{1}{9} \\
+	\ganttmilestone{\textbf{Plan \& Review Hand in}}{2} \\
+	\ganttbar[bar/.style={fill=blue}]{Ensure equipment is acquired}{2}{4} \\
+	\ganttmilestone{\textbf{Project Starts}}{4} \\
+	\ganttbar[bar/.style={fill=blue}]{Set Up \& Check Equipment}{5}{6} \\
+	\ganttbar[bar/.style={fill=blue}]{Code Python Script}{6}{8} \\
+	\ganttmilestone{\textbf{Start Data Acquisiiton}}{7} \\
+	\ganttbar[bar/.style={fill=blue}]{Code MATLAB Script}{8}{13} \\
+
+	\ganttbar[bar/.style={fill=blue}]{Data Acquisition for GaAs}{8}{14} \\
+
+	\ganttmilestone{\textbf{Full Time Project}}{10} \\
+
+	\ganttbar[bar/.style={fill=blue}]{Draft Report}{10}{20} \\
+
+	\ganttbar[bar/.style={fill=blue}]{Data Acquisition for GaP}{12}{16} \\
+	\ganttbar[bar/.style={fill=blue}]{Data Analysis}{15}{20} \\
+
+	\ganttbar[bar/.style={fill=blue}]{Finalise Report}{20}{21} \\
+
+	\ganttmilestone{\textbf{Report Hand in}}{21}
+	
+\end{ganttchart}
+
+\
+
+All the labour in this experiment will be conducted in an equal manner as we deemed that most applicable, therefore no divisions of labour have been specified.
+ 
+\end{document}
+
