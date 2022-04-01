@@ -1,6 +1,6 @@
 %% Optical Abosrption MATLAB code - Analysis
 
-import OpticalAnalysisFunctions.nearestRefraction
+import OpticalAnalysisFunctions.nearestValue
 import OpticalAnalysisFunctions.DetectStraightLine
 import OpticalAnalysisFunctions.LongestConsecutive
 import OpticalAnalysisFunctions.DetectLongestStarightLine
@@ -68,8 +68,8 @@ for i=1:size(Lambda,2)
     % approximated value of R calculated
     % Are you not calculating R manually, or just using the estimate?
 
-    n_P(i) = OpticalAnalysisFunctions.nearestRefraction(L_P, Lambda(i), N_P);
-    k_P(i) = OpticalAnalysisFunctions.nearestRefraction(L_P, Lambda(i), K_P);
+    n_P(i) = OpticalAnalysisFunctions.nearestValue(L_P, Lambda(i), N_P);
+    k_P(i) = OpticalAnalysisFunctions.nearestValue(L_P, Lambda(i), K_P);
     R_P(i) = ((n_P(i)-1)+k_P(i).^2)/((n_P(i)+1)+k_P(i).^2);
     % R_P(i) = ((n_P(i)-1))/((n_P(i)+1));
 end
