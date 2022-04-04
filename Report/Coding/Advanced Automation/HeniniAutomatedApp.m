@@ -25,7 +25,8 @@ disp('Program execution resumed')
 
 %% import parameters data
 
-parameters_file = '/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Parameters.csv';
+% parameters_file = '/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Parameters.csv';
+parameters_file = '/Users/harold/Documents/Parameters.csv';
 parameters_data = readtable(parameters_file);
 parameters_values = parameters_data.Var2;
 
@@ -39,6 +40,8 @@ t_calculation = parameters_values(7);
 
 %% run py file
 
+py_file = '/Users/harold/testmatlab.py';
+pyrunfile(py_file)
 
 %% import experimental data
 
@@ -50,11 +53,11 @@ std_data = num(:,3);
 
 % correct for systematic errors in wavelengths
 
-% m = -0.0091;
-% c = 18.1;
-% x = wavelengths;
-% y = m.*x + c + x;
-% wavelengths = y;
+m = -0.0091;
+c = 18.1;
+x = wavelengths;
+y = x - (m*x + c);
+wavelengths = y;
 
 % correct for voltages
 
@@ -73,10 +76,14 @@ g = zeros(size(wavelengths));
 %% conditional plotting - inital is no
 
 if t_eV == 1
+
+    figure('Name', 'Transmission Graph $(eV)$');
     plot(wavelengths, voltages)
 end
 
 if t_lambda == 1
+
+    figure('Name', 'Transmission Graph $(\lambda)$');
     plot(energy_ev, voltages)
 end
 
@@ -85,47 +92,19 @@ end
 
 if t_calculation == 1
 
+    for i=1:size(wavelengths)-1
+        g(i) = (voltages(i+1)-voltages(i))/(wavelengths(i+1)-wavelengths(i));
+    end
+    
+    g_cutoff = (max(voltages)-min(voltages))/(0.20*(max(wavelengths)-min(wavelengths)));
+    
+    g_straighline = g(find(g>g_cutoff));
+    
+    w_straightline = wavelengths(find(g>g_cutoff));
+    v_straightline = voltages(find(g>g_cutoff));
+    std_straighline = std_data(find(g>g_cutoff));
+    
+    fit = StraightLineFit(w_straightline, v_straightline, std_straighline, wavelengths, voltages);
+
 end
-
-for i=1:size(wavelengths)-1
-    g(i) = (voltages(i+1)-voltages(i))/(wavelengths(i+1)-wavelengths(i));
-end
-
-g_cutoff = (max(voltages)-min(voltages))/(0.20*(max(wavelengths)-min(wavelengths)));
-
-g_straighline = g(find(g>g_cutoff));
-
-w_straightline = wavelengths(find(g>g_cutoff));
-v_straightline = voltages(find(g>g_cutoff));
-std_straighline = std_data(find(g>g_cutoff));
-
-fit = StraightLineFit(w_straightline, v_straightline, std_straighline, wavelengths, voltages);
-
-coefficients = coeffvalues(fit);
-
-bandgap_wavelength = -coefficients(2)/coefficients(1);
-disp(['The bandgap of GaAs is: ', num2str(bandgap_wavelength)])
-
-x = linspace(0,1200,1200);
-LOBF_y = x*coefficients(1) + coefficients(2);
-
-% plots line of best fit -- lambda vs V 
-figure( 'Name', 'Band_Gap_With_LineOfBestFit' );
-
-plot(wavelengths, voltages);
-hold on
-plot(x, LOBF_y,'--');
-hold on
-plot(w_straightline, v_straightline, '*');
-hold on
-plot(bandgap_wavelength,0, 'm*','MarkerSize', 10);
-xlabel('Wavelengths $(\lambda)$')
-ylabel('Voltages (V)')
-xlim([min(wavelengths) max(wavelengths)])
-ylim([0 max(voltages)])
-
-
- 
-
-%%
 

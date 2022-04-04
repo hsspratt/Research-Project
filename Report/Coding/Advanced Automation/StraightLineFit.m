@@ -66,6 +66,35 @@ xlabel('wavelengths');
 ylabel('voltages');
 grid on
 
+% calculation of band gap
+
+% parameters for graph and coefficients
+
+coefficients = coeffvalues(fitresult);
+
+bandgap_wavelength = -coefficients(2)/coefficients(1);
+disp(['The bandgap of GaAs is: ', num2str(bandgap_wavelength)])
+
+x = linspace(0,1200,1200);
+LOBF_y = x*coefficients(1) + coefficients(2);
+
+% plots line of best fit -- lambda vs V
+% Create a figure for the plots.
+
+figure( 'Name', 'Band_Gap_With_LineOfBestFit' );
+
+plot(wavelengths, voltages);
+hold on
+plot(x, LOBF_y,'--');
+hold on
+plot(w_straightline, v_straightline, '*');
+hold on
+plot(bandgap_wavelength,0, 'm*','MarkerSize', 10);
+xlabel('Wavelengths $(\lambda)$')
+ylabel('Voltages (V)')
+xlim([min(wavelengths) max(wavelengths)])
+ylim([0 max(voltages)])
+
 
 
 
