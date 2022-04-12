@@ -9,7 +9,7 @@ set(groot,'defaultLegendInterpreter','latex');
 
 import StaightLineFit.*
 
-%% opening and running of app
+%% opening and running of app 
 
 app = AutomatedApp;
 
@@ -41,7 +41,7 @@ t_calculation = parameters_values(7);
 %% run py file
 
 py_file = '/Users/harold/testmatlab.py';
-pyrunfile(py_file)
+%pyrunfile(py_file)
 
 %% import experimental data
 
