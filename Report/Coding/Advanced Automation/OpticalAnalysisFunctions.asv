@@ -228,13 +228,10 @@ classdef OpticalAnalysisFunctions
         end
 
         function RefractiveIndex = CalculateRefractiveIndex(wavelength, type)
-
             if strcmp(type,'GaAs') == 1
-                RefractiveIndex = csvimport('/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Data/Refractive/Papatryfonoset-2021-0.260-1.88-Ga_As.csv');
-            elseif strcmp(type,'GaP')
-                disp('Need to connect csv file!!')
+                RefractiveIndex = csvimport('/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Data/Refractive/Papatryfonoset-2021-0.260-1.88-Ga_As.csv'); 
             end
-
+            
             RefractiveIndex(1,:)  = [];  % removing column titles
             
             RefractiveIndexInfo  = zeros(max(size(RefractiveIndex)),min(size(RefractiveIndex)));
@@ -259,39 +256,7 @@ classdef OpticalAnalysisFunctions
                 k(i) = OpticalAnalysisFunctions.nearestValue(L, wavelength(i), K);
                 R(i) = ((n(i)-1)+k(i).^2)/((n(i)+1)+k(i).^2);
             end
-
-            RefractiveIndex = R;
-
-            figure( 'Name', 'Refractive Index');
-
-            plot(L,N) % real refractive index - n
-            hold on
-            plot(L,K) % complex refracive index - ik
-            hold on
-            plot(wavelength(1:150:end),n(1:150:end),'*') % real refractive index - n
-            hold on
-            plot(wavelength(1:150:end),k(1:150:end),'*') % complex refracive index - ik
-            
-            title('Refractive Index $200 -- 830 nm$','Interpreter','latex');
-            legend('Real refractive index','Complex refractive index', ...
-                'Experimental Real refractive','Experimental Complex refractive','Interpreter','latex')
-            
-            % legand needs changing
-            
-            xlabel( 'Wavelength $/nm$', 'Interpreter', 'latex' );
-            ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
-
         end
-
-        function NewWavelengths = WavelengthsSystematicCorrection(wavelengths) 
-        m = -0.0091;
-        c = 18.1;
-        x = wavelengths;
-        y = x + (m*x + c);
-        % wavelengths = y;
-        NewWavelengths = y;
-        end
-
     end
 
 end

@@ -9,23 +9,22 @@ set(groot,'defaultLegendInterpreter','latex');
 
 import StaightLineFit.*
 
-%% opening and running of app 
+%% opening and running of app - commented
 
-app = AutomatedApp;
-
-try
-    while app.RunScriptButton.Value == 0
-    pause(0.1)
-    end
-catch
-    warning('Invalid or deleted object.')
-end
-
-disp('Program execution resumed')
+% app = AutomatedApp;
+% 
+% try
+%     while app.RunScriptButton.Value == 0
+%     pause(0.1)
+%     end
+% catch
+%     warning('Invalid or deleted object.')
+% end
+% 
+% disp('Program execution resumed')
 
 %% import parameters data
 
-% parameters_file = '/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Parameters.csv';
 parameters_file = '/Users/harold/Documents/Parameters.csv';
 parameters_data = readtable(parameters_file);
 parameters_values = parameters_data.Var2;
@@ -38,63 +37,24 @@ t_eV = parameters_values(5);
 t_lambda = parameters_values(6);
 t_calculation = parameters_values(7);
 
-%% run py file
+%% run py file - commented
 
-py_file = '/Users/harold/testmatlab.py';
-%pyrunfile(py_file)
+% py_file = '/Users/harold/testmatlab.py';
+% pyrunfile(py_file)
 
 %% Refractive Index 
 
 import OpticalAnalysisFunctions.nearestValue
+import OpticalAnalysisFunctions.CalculateRefractiveIndex
 
 % loads the refractive index info
 
 wavelength = linspace(350,1089,740)'
 
-RefractiveIndex_GaAs = csvimport('/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Data/Refractive/Papatryfonoset-2021-0.260-1.88-Ga_As.csv'); 
-RefractiveIndex_GaAs(1,:)  = [];  % removing column titles
+type = 'GaAs'
 
-RefractiveIndexInfo_GaAs  = zeros(max(size(RefractiveIndex_GaAs)),min(size(RefractiveIndex_GaAs)));
+CalculateRefractiveIndex(wavelength, type)
 
-for c=1:min(size(RefractiveIndex_GaAs))
-    for r=1:max(size(RefractiveIndex_GaAs))
-        RefractiveIndexInfo_GaAs(r,c)  = RefractiveIndex_GaAs{r,c};
-    end
-end
-
-L_As  = RefractiveIndexInfo_GaAs(:,1).*1000;
-N_As  = RefractiveIndexInfo_GaAs(:,2);
-K_As  = RefractiveIndexInfo_GaAs(:,3);
-
-n_As = zeros(size(wavelength));
-k_As = zeros(size(wavelength));
-R_As = zeros(size(wavelength));
-
-for i=1:max(size(wavelength))
-    % Approximated value of R calculated - Not calculating R manually with this method
-    n_As(i) = OpticalAnalysisFunctions.nearestValue(L_As, wavelength(i), N_As);
-    k_As(i) = OpticalAnalysisFunctions.nearestValue(L_As, wavelength(i), K_As);
-    R_As(i) = ((n_As(i)-1)+k_As(i).^2)/((n_As(i)+1)+k_As(i).^2);
-end
-
-figure( 'Name', 'Refractive Index');
-
-plot(L_As,N_As) % real refractive index - n
-hold on
-plot(L_As,K_As) % complex refracive index - ik
-hold on
-plot(wavelength(1:150:end),n_As(1:150:end),'*') % real refractive index - n
-hold on
-plot(wavelength(1:150:end),k_As(1:150:end),'*') % complex refracive index - ik
-
-title('Refractive Index $200 -- 830 nm$','Interpreter','latex');
-legend('Real refractive index','Complex refractive index', ...
-    'Experimental Real refractive','Experimental Complex refractive','Interpreter','latex')
-
-% legand needs changing
-
-xlabel( 'Wavelength $/nm$', 'Interpreter', 'latex' );
-ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
 
 %% Experimental Data
 
@@ -106,19 +66,37 @@ ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
 
 %% import experimental data
 
-GaAs_Data = '/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/_21.03.22  13.00.57  20 ms 40/21.03.22  13.00.57  .txt';
-num = importdata(GaAs_Data);
+% GaAs_Data = '/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/_21.03.22  13.00.57  20 ms 40/21.03.22  13.00.57  .txt';
+% num = importdata(GaAs_Data);
+% 
+% wavelengths = num(:,2);
+% std_data = num(:,3);
 
-wavelengths = num(:,2);
-std_data = num(:,3);
+file_0 = "/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/09.05.22  13.14.01  20 ms 15.0/Transmission_Data.txt"
+num_0 = importdata(file_0);
+
+voltages_0 = num_0(1:1089-349,1);
+wavelengths_0 = num_0(1:1089-349,2);
+
+file_1 = "/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/09.05.22  15.30.37  20 ms 15.0/TransmissionData.txt"
+num_1 = importdata(file_1);
+
+voltages_1 = num_1(:,1);
+wavelengths_1 = num_1(:,2);
 
 % correct for systematic errors in wavelengths
 
-m = -0.0091;
-c = 18.1;
-x = wavelengths;
-y = x + (m*x + c);
-wavelengths = y;
+import OpticalAnalysisFunctions.WavelengthsSystematicCorrection
+
+wavelengths_0 = WavelengthsSystematicCorrection(wavelengths_0);
+wavelengths_1 = WavelengthsSystematicCorrection(wavelengths_1);
+
+% plot(wavelengths_0, voltages_0-min(voltages_0))
+% hold on
+% plot(wavelengths_1,voltages_1-min(voltages_1))
+
+voltages_0 = voltages_0-min(voltages_0)
+voltages_1 = voltages_1-min(voltages_1)
 
 % correct for voltages
 
@@ -128,19 +106,9 @@ voltages = voltages - abs(V_min);      % nomalise voltages to min 0
 
 %% constants for experiment
 
-file_sample = "/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/09.05.22  15.30.37  20 ms 15.0/Transmission_Data.txt"
-num_sample = importdata(file_sample);
 
-voltages_sample = num_sample(:,1)
-wavelengths_sample = linspace(350,1089,740)'
 
-file_nothing = "/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/09.05.22  13.14.01  20 ms 15.0/Transmission_Data.txt"
-num_nothing = importdata(file_nothing);
-
-voltages_nothing = num_nothing(1:1089-349,1)
-wavelengths_nothing = num_nothing(1:1089-349,2)
-
-T = smooth(voltages_sample)./smooth(voltages_nothing);
+T = smooth(voltages_1)./smooth(voltages_0);
 
 
 h = 6.62607004*10^(-34); % planks constant
@@ -150,11 +118,21 @@ x_err = 0.001;                                     % error on thickness of sampl
 
 energy_ev = h*c./(wavelength.*10^(-9)*1.6*10^-19); % calculates the energy in eV for the respective wavelengths
 
-%R = R_As
-R = (3.5860 - 1)^2 / (3.5860 + 1)^2
-%R = 0.33
+R_1 = R_As
+R_2 = (3.5860 - 1)^2 / (3.5860 + 1)^2
+R_3 = 0.33
 
-alpha = -(x.^(-1)).*log((((1 - R).^4 + 4.*(T.^2).*(R.^2)).^0.5 - (1 - R).^2)./(2.*T.*(R.^2)));
+alpha_1 = -(x.^(-1)).*log((((1 - R_1).^4 + 4.*(T.^2).*(R_1.^2)).^0.5 - (1 - R_1).^2)./(2.*T.*(R_1.^2)));
+alpha_2 = -(x.^(-1)).*log((((1 - R_2).^4 + 4.*(T.^2).*(R_2.^2)).^0.5 - (1 - R_2).^2)./(2.*T.*(R_2.^2)));
+alpha_3 = -(x.^(-1)).*log((((1 - R_3).^4 + 4.*(T.^2).*(R_3.^2)).^0.5 - (1 - R_3).^2)./(2.*T.*(R_3.^2)));
+
+plot(energy_ev, alpha_1)
+hold on
+plot(energy_ev, alpha_2)
+hold on 
+plot(energy_ev, alpha_3)
+
+
 %offsetalpha = alpha + abs(-500.2303);
 
 squarealpha = alpha.^2;
