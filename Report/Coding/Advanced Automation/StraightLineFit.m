@@ -36,20 +36,23 @@ figure('Name', 'Straight Line Fit' );
 % Plot fit with data.
 subplot( 2, 1, 1 );
 h = plot( fitresult, xData, yData, 'predobs' );
-legend( h, 'voltages vs. wavelengths with deviation', 'Straight Line Fit', 'Lower bounds (Straight Line Fit)', 'Upper bounds (Straight Line Fit)', 'Location', 'NorthEast');
+legend( h, 'voltages vs. wavelengths with deviation', 'Straight Line Fit', 'Lower bounds (Straight Line Fit)', 'Upper bounds (Straight Line Fit)', 'Location', 'NorthWest');
 hold on
 % Label axes
-xlabel('wavelengths');
-ylabel('voltages');
+xlabel('Wavelengths $(\lambda)$');
+ylabel('Voltages (V)');
+xlim([min(xData) max(xData)])
+ylim([0 max(yData)])
 grid on
 
 % Plot residuals.
 subplot( 2, 1, 2 );
 h = plot( fitresult, xData, yData, 'residuals' );
-legend( h, 'Straight Line Fit - residuals', 'Zero Line', 'Location', 'NorthEast');
+legend( h, 'Straight Line Fit - residuals', 'Zero Line', 'Location', 'NorthWest');
 % Label axes
-xlabel('wavelengths');
-ylabel('voltages');
+xlabel('Wavelengths $(\lambda)$');
+ylabel('Voltages (V)');
+
 grid on
 
 
@@ -62,8 +65,10 @@ hold on
 plot(wavelengths, voltages)
 
 % Label axes
-xlabel('wavelengths');
-ylabel('voltages');
+xlabel('Wavelengths $(\lambda)$');
+ylabel('Voltages (V)');
+xlim([min(wavelengths) max(wavelengths)])
+ylim([0 max(voltages)])
 grid on
 
 % calculation of band gap
@@ -85,7 +90,7 @@ figure( 'Name', 'Band_Gap_With_LineOfBestFit' );
 
 plot(wavelengths, voltages);
 hold on
-plot(x, LOBF_y,'--');
+plot(x, LOBF_y,'--','color','k');
 hold on
 plot(w_straightline, v_straightline, '*');
 hold on
@@ -94,6 +99,7 @@ xlabel('Wavelengths $(\lambda)$')
 ylabel('Voltages (V)')
 xlim([min(wavelengths) max(wavelengths)])
 ylim([0 max(voltages)])
+
 
 
 
