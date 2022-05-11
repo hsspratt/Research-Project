@@ -53,7 +53,7 @@ wavelength = linspace(350,1089,740)'
 
 type = 'GaAs'
 
-CalculateRefractiveIndex(wavelength, type)
+R_As = CalculateRefractiveIndex(wavelength, type)
 
 
 %% Experimental Data
@@ -100,9 +100,9 @@ voltages_1 = voltages_1-min(voltages_1)
 
 % correct for voltages
 
-voltages = smooth(num(:,1));           % smooth
-V_min = min(voltages).*0.9999;
-voltages = voltages - abs(V_min);      % nomalise voltages to min 0
+% voltages = smooth(num(:,1));           % smooth
+% V_min = min(voltages).*0.9999;
+% voltages = voltages - abs(V_min);      % nomalise voltages to min 0
 
 %% constants for experiment
 
@@ -139,6 +139,28 @@ plot(energy_ev, alpha_2)
 hold on 
 plot(energy_ev, alpha_3)
 
+
+
+% max_alpha_index = find(max(alpha_3) == alpha_3);
+% min_alpha_index = find(min(alpha_3) == alpha_3);
+% 
+% index_diff = (max_alpha_index + min_alpha_index)*0.5;
+% 
+% if rem(index_diff,2) ~= 0
+%     index_diff = index_diff + 0.5;
+% end
+% 
+% mid_alpha = (max(alpha_3)-min(alpha_3))/2;
+% difference_points = abs(mid_alpha - alpha_3);
+% index_mid_alpha = find(min(difference_points)==difference_points);
+% 
+% spliced_alpha = alpha_3(index_mid_alpha-index_diff:index_mid_alpha+index_diff);
+
+gradient = zeros(1, max(size(energy_ev))-1);
+gradient(1) = alpha_3(1)./(energy_ev(1));
+for i=1:max(size(energy_ev))-1
+    gradient(i) = (alpha_3(i+1) - alpha_3(i))./(energy_ev(i+1) - energy_ev(i));
+end
 
 squarealpha = smooth(alpha.^2);
 
