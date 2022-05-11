@@ -72,5 +72,6 @@ set(gca,'FontSize',16)
 
 
 %%
-nboltz = 0.3;
-Eboltz = E0 - (nboltz*deltE);
+nboltzdir = 0.3;
+nboltzindir = 4.3;
+Eboltz = E0 - (nboltzdir*deltE);
