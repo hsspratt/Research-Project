@@ -49,9 +49,9 @@ import OpticalAnalysisFunctions.CalculateRefractiveIndex
 
 % loads the refractive index info
 
-wavelength = linspace(350,1089,740)'
+wavelength = linspace(350,1089,740)';
 
-type = 'GaAs'
+type = 'GaAs';
 
 CalculateRefractiveIndex(wavelength, type)
 
