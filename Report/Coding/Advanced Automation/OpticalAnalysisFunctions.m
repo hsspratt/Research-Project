@@ -39,6 +39,10 @@ classdef OpticalAnalysisFunctions
 
         function StraightLine = DetectStraightLine(xdata, ydata, err)
         
+        xdata = smooth(xdata);
+        ydata = smooth(ydata);
+
+        gradient = zeros(1, max(size(xdata))-1);
         gradient(1) = ydata(1)./(xdata(1));
         for i=1:max(size(xdata))-1
             gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
@@ -48,14 +52,16 @@ classdef OpticalAnalysisFunctions
         StraightLine = [];
         for i = 1:size(gradient,2)-1
             section = gradient(i:i+1);
-            p12 = section(1);
-            p23 = section(2);
-            %per = p23*err;
-            rolling_average = mean(gradient(1:i+1))
-            per = rolling_average*err;
-
-            if (p23-per <= p12) && (p12 <= p23+per)
-               StraightLine(i) = section(1);
+            if abs(gradient) > abs((max(ydata)-min(ydata))/((max(xdata)-min(xdata))*0.25))
+                p12 = section(1)
+                p23 = section(2);
+                % per = p23*err;
+                rolling_average = mean(gradient(1:i+1));
+                per = rolling_average*err;
+    
+                if (p23-per <= p12) && (p12 <= p23+per)
+                   StraightLine(i) = section(1);
+                end
             end
         end
 

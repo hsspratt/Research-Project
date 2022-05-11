@@ -39,6 +39,10 @@ classdef OpticalAnalysisFunctions
 
         function StraightLine = DetectStraightLine(xdata, ydata, err)
         
+        xdata = smooth(xdata);
+        ydata = smooth(ydata);
+
+        gradient = zeros(1, max(size(xdata))-1);
         gradient(1) = ydata(1)./(xdata(1));
         for i=1:max(size(xdata))-1
             gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
@@ -48,10 +52,11 @@ classdef OpticalAnalysisFunctions
         StraightLine = [];
         for i = 1:size(gradient,2)-1
             section = gradient(i:i+1);
+            if gradient > (max(y_data)-min(y_data))/
             p12 = section(1);
             p23 = section(2);
-            %per = p23*err;
-            rolling_average = mean(gradient(1:i+1))
+            % per = p23*err;
+            rolling_average = mean(gradient(1:i+1));
             per = rolling_average*err;
 
             if (p23-per <= p12) && (p12 <= p23+per)
@@ -228,10 +233,13 @@ classdef OpticalAnalysisFunctions
         end
 
         function RefractiveIndex = CalculateRefractiveIndex(wavelength, type)
+
             if strcmp(type,'GaAs') == 1
-                RefractiveIndex = csvimport('/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Data/Refractive/Papatryfonoset-2021-0.260-1.88-Ga_As.csv'); 
+                RefractiveIndex = csvimport('/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Data/Refractive/Papatryfonoset-2021-0.260-1.88-Ga_As.csv');
+            elseif strcmp(type,'GaP')
+                disp('Need to connect csv file!!')
             end
-            
+
             RefractiveIndex(1,:)  = [];  % removing column titles
             
             RefractiveIndexInfo  = zeros(max(size(RefractiveIndex)),min(size(RefractiveIndex)));
@@ -256,7 +264,39 @@ classdef OpticalAnalysisFunctions
                 k(i) = OpticalAnalysisFunctions.nearestValue(L, wavelength(i), K);
                 R(i) = ((n(i)-1)+k(i).^2)/((n(i)+1)+k(i).^2);
             end
+
+            RefractiveIndex = R;
+
+            figure( 'Name', 'Refractive Index');
+
+            plot(L,N) % real refractive index - n
+            hold on
+            plot(L,K) % complex refracive index - ik
+            hold on
+            plot(wavelength(1:150:end),n(1:150:end),'*') % real refractive index - n
+            hold on
+            plot(wavelength(1:150:end),k(1:150:end),'*') % complex refracive index - ik
+            
+            title('Refractive Index $200 -- 830 nm$','Interpreter','latex');
+            legend('Real refractive index','Complex refractive index', ...
+                'Experimental Real refractive','Experimental Complex refractive','Interpreter','latex')
+            
+            % legand needs changing
+            
+            xlabel( 'Wavelength $/nm$', 'Interpreter', 'latex' );
+            ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
+
         end
+
+        function NewWavelengths = WavelengthsSystematicCorrection(wavelengths) 
+        m = -0.0091;
+        c = 18.1;
+        x = wavelengths;
+        y = x + (m*x + c);
+        % wavelengths = y;
+        NewWavelengths = y;
+        end
+
     end
 
 end

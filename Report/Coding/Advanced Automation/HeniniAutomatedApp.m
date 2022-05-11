@@ -106,6 +106,9 @@ voltages = voltages - abs(V_min);      % nomalise voltages to min 0
 
 %% constants for experiment
 
+import OpticalAnalysisFunctions.CutExcessData
+import OpticalAnalysisFunctions.DetectLongestStarightLine
+import OpticalAnalysisFunctions.DetectStraightLine
 
 
 T = smooth(voltages_1)./smooth(voltages_0);
@@ -118,13 +121,17 @@ x_err = 0.001;                                     % error on thickness of sampl
 
 energy_ev = h*c./(wavelength.*10^(-9)*1.6*10^-19); % calculates the energy in eV for the respective wavelengths
 
-R_1 = R_As
-R_2 = (3.5860 - 1)^2 / (3.5860 + 1)^2
-R_3 = 0.33
+R_1 = R_As;
+R_2 = (3.5860 - 1)^2 / (3.5860 + 1)^2;
+R_3 = 0.33;
 
 alpha_1 = -(x.^(-1)).*log((((1 - R_1).^4 + 4.*(T.^2).*(R_1.^2)).^0.5 - (1 - R_1).^2)./(2.*T.*(R_1.^2)));
 alpha_2 = -(x.^(-1)).*log((((1 - R_2).^4 + 4.*(T.^2).*(R_2.^2)).^0.5 - (1 - R_2).^2)./(2.*T.*(R_2.^2)));
 alpha_3 = -(x.^(-1)).*log((((1 - R_3).^4 + 4.*(T.^2).*(R_3.^2)).^0.5 - (1 - R_3).^2)./(2.*T.*(R_3.^2)));
+
+alpha_1 = alpha_1 - min(alpha_1);
+alpha_2 = alpha_2 - min(alpha_2);
+alpha_3 = alpha_3 - min(alpha_3);
 
 plot(energy_ev, alpha_1)
 hold on
@@ -133,15 +140,9 @@ hold on
 plot(energy_ev, alpha_3)
 
 
-%offsetalpha = alpha + abs(-500.2303);
+squarealpha = smooth(alpha.^2);
 
-squarealpha = alpha.^2;
-
-square_alpha = smooth(squarealpha);
-
-%sqrtalpha = sqrt(abs(alpha));
-
-%sqrtalpha = smooth(sqrtalpha);
+sqrtalpha = smooth(sqrt(alpha));
 
 alpha_check =  (1/x).*log(((1-R).^2)./T);
 
