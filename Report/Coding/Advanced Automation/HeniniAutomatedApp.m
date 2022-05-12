@@ -49,9 +49,9 @@ import OpticalAnalysisFunctions.CalculateRefractiveIndex
 
 % loads the refractive index info
 
-wavelength = linspace(350,1089,740)';
+wavelength = linspace(350,1089,740)'
 
-type = 'GaAs';
+type = 'GaAs'
 
 R_As = CalculateRefractiveIndex(wavelength, type)
 
@@ -270,3 +270,49 @@ num = importdata(file);
 voltages = num(:,1)
 wavelengths = linspace(350,1089,740)'
 plot(wavelengths, voltages)
+
+%% Sigmoid Plotting
+
+h = 6.63*10^-34;
+c = 3*10^8;
+%%
+
+a = smooth(alpha_1);
+
+amax = max(a);
+amin = min(a);
+
+%From here down 
+nmax = find(amax==a);
+
+
+perc = 0.5;
+nmaxrange = round(nmax-150);
+%nminrange = round(nmin - perc*nmin);
+
+l = length(a);
+ai = a((l-nmaxrange):l,:);
+
+ahalf = (amax - amin)/2;
+apos = abs(ahalf-ai);
+aposmin = min(apos);
+napos = find(aposmin==apos);
+
+la = length(ai);
+na = 1089 - la+1;
+Ewave = (na:1089);
+E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
+E0 = E(napos);
+%543
+
+aimin = min(ai);
+
+naimin = find(aimin == ai);
+naimax = find(amax == ai);
+
+ai = ai'
+
+save('ExperimentalData.mat', 'amin', 'amax', 'E0', 'E', 'ai')
+
+app = Sigmoid;
+
