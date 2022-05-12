@@ -3,8 +3,8 @@
 %gaasdat = gaasdatfile(:,1);
 
 %transfile = importdata('Nosample.txt');
-load('/Users/jakehurley/Documents/GitHub/Research-Project/MATLAB Files - J/Three_Alphas.mat')
-load('/Users/jakehurley/Documents/GitHub/Research-Project/MATLAB Files - J/Alphas_vs_EnergyEv.mat')
+load('Three_Alphas.mat')
+load('Alphas_vs_EnergyEv.mat')
 
 h = 6.63*10^-34;
 c = 3*10^8;
@@ -42,7 +42,6 @@ E0 = E(napos);
 
 %naimin = find(aimin == ai);
 %naimax = find(amax == ai);
-
 %%gradient(1) = ai(1)./(E(1));
         %for i=1:max(size(E))-1
             %gradient(i) = (ai(i+1) - ai(i))./(E(i+1) - E(i));

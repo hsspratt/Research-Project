@@ -49,11 +49,11 @@ import OpticalAnalysisFunctions.CalculateRefractiveIndex
 
 % loads the refractive index info
 
-wavelength = linspace(350,1089,740)';
+wavelength = linspace(350,1089,740)'
 
-type = 'GaAs';
+type = 'GaAs'
 
-CalculateRefractiveIndex(wavelength, type)
+R_As = CalculateRefractiveIndex(wavelength, type)
 
 
 %% Experimental Data
@@ -100,9 +100,9 @@ voltages_1 = voltages_1-min(voltages_1)
 
 % correct for voltages
 
-voltages = smooth(num(:,1));           % smooth
-V_min = min(voltages).*0.9999;
-voltages = voltages - abs(V_min);      % nomalise voltages to min 0
+% voltages = smooth(num(:,1));           % smooth
+% V_min = min(voltages).*0.9999;
+% voltages = voltages - abs(V_min);      % nomalise voltages to min 0
 
 %% constants for experiment
 
@@ -139,6 +139,28 @@ plot(energy_ev, alpha_2)
 hold on 
 plot(energy_ev, alpha_3)
 
+
+
+% max_alpha_index = find(max(alpha_3) == alpha_3);
+% min_alpha_index = find(min(alpha_3) == alpha_3);
+% 
+% index_diff = (max_alpha_index + min_alpha_index)*0.5;
+% 
+% if rem(index_diff,2) ~= 0
+%     index_diff = index_diff + 0.5;
+% end
+% 
+% mid_alpha = (max(alpha_3)-min(alpha_3))/2;
+% difference_points = abs(mid_alpha - alpha_3);
+% index_mid_alpha = find(min(difference_points)==difference_points);
+% 
+% spliced_alpha = alpha_3(index_mid_alpha-index_diff:index_mid_alpha+index_diff);
+
+gradient = zeros(1, max(size(energy_ev))-1);
+gradient(1) = alpha_3(1)./(energy_ev(1));
+for i=1:max(size(energy_ev))-1
+    gradient(i) = (alpha_3(i+1) - alpha_3(i))./(energy_ev(i+1) - energy_ev(i));
+end
 
 squarealpha = smooth(alpha.^2);
 
@@ -248,3 +270,49 @@ num = importdata(file);
 voltages = num(:,1)
 wavelengths = linspace(350,1089,740)'
 plot(wavelengths, voltages)
+
+%% Sigmoid Plotting
+
+h = 6.63*10^-34;
+c = 3*10^8;
+%%
+
+a = smooth(alpha_1);
+
+amax = max(a);
+amin = min(a);
+
+%From here down 
+nmax = find(amax==a);
+
+
+perc = 0.5;
+nmaxrange = round(nmax-150);
+%nminrange = round(nmin - perc*nmin);
+
+l = length(a);
+ai = a((l-nmaxrange):l,:);
+
+ahalf = (amax - amin)/2;
+apos = abs(ahalf-ai);
+aposmin = min(apos);
+napos = find(aposmin==apos);
+
+la = length(ai);
+na = 1089 - la+1;
+Ewave = (na:1089);
+E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
+E0 = E(napos);
+%543
+
+aimin = min(ai);
+
+naimin = find(aimin == ai);
+naimax = find(amax == ai);
+
+ai = ai'
+
+save('ExperimentalData.mat', 'amin', 'amax', 'E0', 'E', 'ai')
+
+app = Sigmoid;
+

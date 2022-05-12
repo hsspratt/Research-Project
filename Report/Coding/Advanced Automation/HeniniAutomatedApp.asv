@@ -53,7 +53,7 @@ wavelength = linspace(350,1089,740)'
 
 type = 'GaAs'
 
-CalculateRefractiveIndex(wavelength, type)
+R_As = CalculateRefractiveIndex(wavelength, type)
 
 
 %% Experimental Data
@@ -96,16 +96,19 @@ wavelengths_1 = WavelengthsSystematicCorrection(wavelengths_1);
 % plot(wavelengths_1,voltages_1-min(voltages_1))
 
 voltages_0 = voltages_0-min(voltages_0)
-voltages_1 = voltages_0-min(voltages_0)
+voltages_1 = voltages_1-min(voltages_1)
 
 % correct for voltages
 
-voltages = smooth(num(:,1));           % smooth
-V_min = min(voltages).*0.9999;
-voltages = voltages - abs(V_min);      % nomalise voltages to min 0
+% voltages = smooth(num(:,1));           % smooth
+% V_min = min(voltages).*0.9999;
+% voltages = voltages - abs(V_min);      % nomalise voltages to min 0
 
 %% constants for experiment
 
+import OpticalAnalysisFunctions.CutExcessData
+import OpticalAnalysisFunctions.DetectLongestStarightLine
+import OpticalAnalysisFunctions.DetectStraightLine
 
 
 T = smooth(voltages_1)./smooth(voltages_0);
@@ -118,13 +121,17 @@ x_err = 0.001;                                     % error on thickness of sampl
 
 energy_ev = h*c./(wavelength.*10^(-9)*1.6*10^-19); % calculates the energy in eV for the respective wavelengths
 
-R_1 = R_As
-R_2 = (3.5860 - 1)^2 / (3.5860 + 1)^2
-R_3 = 0.33
+R_1 = R_As;
+R_2 = (3.5860 - 1)^2 / (3.5860 + 1)^2;
+R_3 = 0.33;
 
 alpha_1 = -(x.^(-1)).*log((((1 - R_1).^4 + 4.*(T.^2).*(R_1.^2)).^0.5 - (1 - R_1).^2)./(2.*T.*(R_1.^2)));
 alpha_2 = -(x.^(-1)).*log((((1 - R_2).^4 + 4.*(T.^2).*(R_2.^2)).^0.5 - (1 - R_2).^2)./(2.*T.*(R_2.^2)));
 alpha_3 = -(x.^(-1)).*log((((1 - R_3).^4 + 4.*(T.^2).*(R_3.^2)).^0.5 - (1 - R_3).^2)./(2.*T.*(R_3.^2)));
+
+alpha_1 = alpha_1 - min(alpha_1);
+alpha_2 = alpha_2 - min(alpha_2);
+alpha_3 = alpha_3 - min(alpha_3);
 
 plot(energy_ev, alpha_1)
 hold on
@@ -133,15 +140,31 @@ hold on
 plot(energy_ev, alpha_3)
 
 
-%offsetalpha = alpha + abs(-500.2303);
 
-squarealpha = alpha.^2;
+% max_alpha_index = find(max(alpha_3) == alpha_3);
+% min_alpha_index = find(min(alpha_3) == alpha_3);
+% 
+% index_diff = (max_alpha_index + min_alpha_index)*0.5;
+% 
+% if rem(index_diff,2) ~= 0
+%     index_diff = index_diff + 0.5;
+% end
+% 
+% mid_alpha = (max(alpha_3)-min(alpha_3))/2;
+% difference_points = abs(mid_alpha - alpha_3);
+% index_mid_alpha = find(min(difference_points)==difference_points);
+% 
+% spliced_alpha = alpha_3(index_mid_alpha-index_diff:index_mid_alpha+index_diff);
 
-square_alpha = smooth(squarealpha);
+gradient = zeros(1, max(size(energy_ev))-1);
+gradient(1) = alpha_3(1)./(energy_ev(1));
+for i=1:max(size(energy_ev))-1
+    gradient(i) = (alpha_3(i+1) - alpha_3(i))./(energy_ev(i+1) - energy_ev(i));
+end
 
-%sqrtalpha = sqrt(abs(alpha));
+squarealpha = smooth(alpha.^2);
 
-%sqrtalpha = smooth(sqrtalpha);
+sqrtalpha = smooth(sqrt(alpha));
 
 alpha_check =  (1/x).*log(((1-R).^2)./T);
 
@@ -247,3 +270,45 @@ num = importdata(file);
 voltages = num(:,1)
 wavelengths = linspace(350,1089,740)'
 plot(wavelengths, voltages)
+
+%% Sigmoid Plotting
+
+h = 6.63*10^-34;
+c = 3*10^8;
+%%
+
+a = smooth(alpha_1);
+
+amax = max(a);
+amin = min(a);
+
+%From here down 
+nmax = find(amax==a);
+
+
+perc = 0.5;
+nmaxrange = round(nmax-150);
+%nminrange = round(nmin - perc*nmin);
+
+l = length(a);
+ai = a((l-nmaxrange):l,:);
+
+ahalf = (amax - amin)/2;
+apos = abs(ahalf-ai);
+aposmin = min(apos);
+napos = find(aposmin==apos);
+
+la = length(ai);
+na = 1089 - la+1;
+Ewave = (na:1089);
+E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
+E0 = E(napos);
+%543
+
+aimin = min(ai);
+
+naimin = find(aimin == ai);
+naimax = find(amax == ai);
+
+app = Sigmoid;
+
