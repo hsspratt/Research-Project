@@ -38,21 +38,21 @@ E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
 E0 = E(napos);
 %543
 
-aimin = min(ai);
+%aimin = min(ai);
 
-naimin = find(aimin == ai);
-naimax = find(amax == ai);
+%naimin = find(aimin == ai);
+%naimax = find(amax == ai);
 
-gradient(1) = ai(1)./(E(1));
-        for i=1:max(size(E))-1
-            gradient(i) = (ai(i+1) - ai(i))./(E(i+1) - E(i));
-        end
+%%gradient(1) = ai(1)./(E(1));
+        %for i=1:max(size(E))-1
+            %gradient(i) = (ai(i+1) - ai(i))./(E(i+1) - E(i));
+        %end
 
- gradmax = max(gradient);
- ngradmax = find(gradmax == gradient);
+ %gradmax = max(gradient);
+ %ngradmax = find(gradmax == gradient);
 
-Eminslope = E(ngradmax);
-Emaxslope = E(naimax);
+%Eminslope = E(ngradmax);
+%Emaxslope = E(naimax);
 
 
 
