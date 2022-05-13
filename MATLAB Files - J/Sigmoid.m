@@ -1,31 +1,29 @@
-%gaasdatfile = importdata('Three_Alphas.mat');
-
-%gaasdat = gaasdatfile(:,1);
-
-%transfile = importdata('Nosample.txt');
+%loads in the data
 load('Three_Alphas.mat')
 load('Alphas_vs_EnergyEv.mat')
 
-h = 6.63*10^-34;
+% Experimental constants
+h = 6.63*10^(-34);
 c = 3*10^8;
 %%
 
 a = smooth(alpha_1);
 
+% Find the min and max alpha values and what position they lie
 amax = max(a);
 amin = min(a);
-
-%From here down 
+ 
 nmax = find(amax==a);
 
-
+% Splice excess data beyond 5% of the emmision peak
 perc = 0.5;
 nmaxrange = round(nmax-150);
-%nminrange = round(nmin - perc*nmin);
 
 l = length(a);
 ai = a((l-nmaxrange):l,:);
 
+% Finding the energy co-ordinate that is the midpoint between alpha max and
+% alpha min
 ahalf = (amax - amin)/2;
 apos = abs(ahalf-ai);
 aposmin = min(apos);
@@ -36,26 +34,13 @@ na = 1089 - la+1;
 Ewave = (na:1089);
 E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
 E0 = E(napos);
-%543
-
-%aimin = min(ai);
-
-%naimin = find(aimin == ai);
-%naimax = find(amax == ai);
-%%gradient(1) = ai(1)./(E(1));
-        %for i=1:max(size(E))-1
-            %gradient(i) = (ai(i+1) - ai(i))./(E(i+1) - E(i));
-        %end
-
- %gradmax = max(gradient);
- %ngradmax = find(gradmax == gradient);
-
-%Eminslope = E(ngradmax);
-%Emaxslope = E(naimax);
 
 
+aimin = min(ai);
 
-%deltE = (Emaxslope - Eminslope)/2;
+naimin = find(aimin == ai);
+naimax = find(amax == ai);
+
 deltE = 0.009;
 
 asig = (amax + (amin - amax)./(1+exp((E-E0)./deltE)));
@@ -82,7 +67,7 @@ amaxerr = err_alpha(naimax);
 aminerr = err_alpha(naimin);
 
 amaxmax = amaxerr + amax;
-aminmin = amin - aminerr;
+aminmax = amin - aminerr;
 
 ahalfmax = (amaxmax - aminmin)/2;
 aposmax = abs(ahalfmax-ai);
@@ -100,3 +85,26 @@ naposmin = find(aposminmin==aposmin);
 E0min = E(naposmin);
 
 E0_err = E0max - E0min;
+
+toterr = sqrt((E0_err*(1+0.3*deltE))^2 + ((0.0102-0.0043)*(E0 + 0.3))^2)
+
+%%
+
+wavemax = h*c./(E(naimax).*10^(-9)*1.6*10^-19);
+wavemin = h*c./(E(naimin).*10^(-9)*1.6*10^-19);
+
+wavemaxmax = wavemax - 3;
+wavemaxmin = wavemax + 3;
+
+waveminmax = wavemin - 3;
+waveminmin = wavemin + 3;
+
+Emaxmax = h*c./(wavemaxmax.*10^(-9)*1.6*10^-19);
+Emaxmin = h*c./(wavemaxmin.*10^(-9)*1.6*10^-19);
+Eminmax = h*c./(waveminmax.*10^(-9)*1.6*10^-19);
+Eminmin = h*c./(waveminmin.*10^(-9)*1.6*10^-19);
+
+
+gradmaxmaxco = [Emaxmin,amaxmax];
+gradmaxminco = [Eminmax,aminmax];
+
