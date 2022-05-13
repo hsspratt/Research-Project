@@ -162,13 +162,13 @@ for i=1:max(size(energy_ev))-1
     gradient(i) = (alpha_3(i+1) - alpha_3(i))./(energy_ev(i+1) - energy_ev(i));
 end
 
-squarealpha = smooth(alpha.^2);
+squarealpha = smooth(alpha_1.^2);
 
-sqrtalpha = smooth(sqrt(alpha));
+sqrtalpha = smooth(sqrt(alpha_1));
 
-alpha_check =  (1/x).*log(((1-R).^2)./T);
+alpha_check =  (1/x).*log(((1-R_1).^2)./T);
 
-a = alpha_check - alpha;
+a = alpha_check - alpha_1;
 plot(wavelength,a)
 
 plot(eV_energy,alpha_check)
@@ -176,13 +176,13 @@ plot(eV_energy,alpha_check)
 Joules_energy = (h*c)./(wavelength.*10.^(-9));
 eV_energy = Joules_energy./(1.602176634*10^(-19));
 
-Log_alpha_GaAs = log10(offsetalpha)
+Log_alpha_GaAs = log10(alpha_1)
 
 plot(eV_energy,Log_alpha_GaAs)
 
-plot(wavelength,V0abs)
+plot(wavelength,voltages_0)
 hold on
-plot(wavelength,V1abs,'r')
+plot(wavelength,voltages_1,'r')
 hold off
 
 
@@ -197,32 +197,32 @@ hold on
 hold off
 
 figure(2)
-plot(wavelength,V1abs,'b-')
+plot(wavelength,voltages_0,'b-')
 hold on
-plot(wavelength,V0abs,'r-')
+plot(wavelength,voltages_1,'r-')
 xlabel('Wavelength (nm)','Interpreter','latex')
 ylabel('Voltage','Interpreter','latex')
 
 hold off
 
 figure(3)
-plot(wavelength,alpha)
+plot(wavelength,alpha_1)
 
 hold off
 
 figure(4)
-plot(wavelength,square_alpha)
+plot(wavelength,squarealpha)
 
 hold off
 
 figure(5)
-plot(eV_energy,alpha)
+plot(eV_energy,alpha_1)
 set(gca, 'YScale', 'log')
 
 hold off
 
 figure(6)
-plot(eV_energy,square_alpha)
+plot(eV_energy,squarealpha)
 
 
 g = zeros(size(wavelengths));
@@ -319,3 +319,8 @@ save('ExperimentalData.mat', 'amin', 'amax', 'E0', 'E', 'ai')
 
 app = Sigmoid;
 
+%%
+
+import OpticalAnalysisFunctions.DetectLongestStarightLine
+
+DetectLongestStarightLine()
