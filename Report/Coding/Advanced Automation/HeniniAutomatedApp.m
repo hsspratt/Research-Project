@@ -316,3 +316,8 @@ save('ExperimentalData.mat', 'amin', 'amax', 'E0', 'E', 'ai')
 
 app = Sigmoid;
 
+%%
+
+import OpticalAnalysisFunctions.DetectLongestStarightLine
+
+DetectLongestStarightLine()

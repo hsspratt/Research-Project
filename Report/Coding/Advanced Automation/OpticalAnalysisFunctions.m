@@ -52,8 +52,8 @@ classdef OpticalAnalysisFunctions
         StraightLine = [];
         for i = 1:size(gradient,2)-1
             section = gradient(i:i+1);
-            if abs(gradient) > abs((max(ydata)-min(ydata))/((max(xdata)-min(xdata))*0.25))
-                p12 = section(1)
+            if abs(gradient) > (max(ydata)-min(ydata))/(0.25*(max(xdata)-min(xdata)))
+                p12 = section(1);
                 p23 = section(2);
                 % per = p23*err;
                 rolling_average = mean(gradient(1:i+1));
