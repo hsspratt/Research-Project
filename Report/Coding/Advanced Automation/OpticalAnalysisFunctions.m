@@ -42,7 +42,7 @@ classdef OpticalAnalysisFunctions
         xdata = smooth(xdata);
         ydata = smooth(ydata);
 
-        gradient = zeros(1, max(size(xdata))-1);
+        gradient = zeros(max(size(xdata))-1, 1);
         gradient(1) = ydata(1)./(xdata(1));
         for i=1:max(size(xdata))-1
             gradient(i) = (ydata(i+1) - ydata(i))./(xdata(i+1) - xdata(i));
@@ -50,9 +50,9 @@ classdef OpticalAnalysisFunctions
 
         gradient = smoothdata(gradient);
         StraightLine = [];
-        for i = 1:size(gradient,2)-1
+        for i = 1:size(gradient,1)-1
             section = gradient(i:i+1);
-            if abs(gradient) > (max(ydata)-min(ydata))/(0.25*(max(xdata)-min(xdata)))
+            if abs(gradient) > (max(ydata)-min(ydata))/((max(xdata)-min(xdata)))
                 p12 = section(1);
                 p23 = section(2);
                 % per = p23*err;
