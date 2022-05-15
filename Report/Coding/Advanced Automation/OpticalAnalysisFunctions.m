@@ -205,7 +205,7 @@ classdef OpticalAnalysisFunctions
         function RefractiveIndex = CalculateRefractiveIndex(wavelength, type)
 
             if strcmp(type,'GaAs') == 1
-                RefractiveIndex = csvimport('/Users/harold/Documents/Academia/Nottingham Uni/Year 4/Research Project/Report/Coding/Data/Refractive/Papatryfonoset-2021-0.260-1.88-Ga_As.csv');
+                RefractiveIndex = csvimport('Papatryfonoset-2021-0.260-1.88-Ga_As.csv');
             elseif strcmp(type,'GaP')
                 disp('Need to connect csv file!!')
             end
