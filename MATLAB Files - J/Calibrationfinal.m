@@ -61,7 +61,7 @@ sserrorplot = 0.1*ones(length(Difference1),1);
 
 hold on
 errorbar(Expected1,Difference1,sserrorplot,'.b','MarkerSize',8,'CapSize',4)
-xlabel('Wavelength (nm)','FontSize', 20)
+xlabel('Wavelength (nm)','FontSize', 20,'Interpreter','latex')
 ylabel('Difference in wavelength (nm)')
 ylim([0 4])
 xlim([350 950])

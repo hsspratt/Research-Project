@@ -6,6 +6,8 @@ load('Alphas_vs_EnergyEv.mat')
 h = 6.63*10^(-34);
 c = 3*10^8;
 %%
+h = 6.63*10^(-34);
+c = 3*10^8;
 
 a = smooth(alpha_1);
 
