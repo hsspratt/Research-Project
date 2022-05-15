@@ -48,8 +48,6 @@ Recorded1 = [367.11
 913.49
 923.72];
 
-%Remember fluctuation of 0.1nm 
-
 Difference1 = Recorded1 - Expected1;
 %This equation gives the delta between the expected values and the
 %recorded values so that we can calculate the standard deviation.
@@ -68,7 +66,6 @@ ylabel('Difference in wavelength (nm)')
 ylim([0 4])
 xlim([350 950])
 set(gca,'FontSize',16)
-%title('Plot of the difference in wavelength against the wavelength in spectra')
 legend('off')
 hold off
 
@@ -77,6 +74,7 @@ hold off
 
 clc
 
+% Inputting data manually recorded
 Expected2 = [
 400
 425
@@ -139,9 +137,6 @@ weights = 1 / standard_deviation2.^2;
 weightsplot = weights*ones(length(Difference2),1);
 
 %Using the standard error approach to combine the standard error on the
-%ocean optics offset average and the error of 0.2nm on the read out of the
-%wavelengths on the spectrasuite
-%Should there be a 0.5 in there too???
 
 serror = sqrt(0.1^2 + Standard_error^2);
 serrorplot = serror * ones(length(Difference2),1);
@@ -155,10 +150,10 @@ xlim([350 1050])
 ylim([8 16])
 set(gca,'FontSize',16)
 set(h,'LineWidth',2)
-%title('Plot of the difference in wavelength against the wavelength in spectra')
 legend('off')
 hold off
 
+%Pulling coeffecients and errors
 Bound = confint(fittedmodel1);
 Gradlow = Bound(1,2);
 Gradup = Bound(2,2);

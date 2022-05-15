@@ -295,6 +295,7 @@ if Sigmoid == 1
 
 a = smooth(alpha);
 
+% Find the min and max alpha values and what position they lie
 amax = max(a);
 amin = min(a);
 
@@ -302,14 +303,16 @@ amin = min(a);
 
 nmax = find(amax==a);
 
-
+% Splice excess data beyond 5% of the emmision peak
 perc = 0.5;
 nmaxrange = round(nmax-150);
-%nminrange = round(nmin - perc*nmin);
+
 
 l = length(a);
 ai = a((l-nmaxrange):l,:);
 
+% Finding the energy co-ordinate that is the midpoint between alpha max and
+% alpha min
 ahalf = (amax - amin)/2;
 apos = abs(ahalf-ai);
 aposmin = min(apos);
@@ -320,7 +323,7 @@ na = 1089 - la+1;
 Ewave = (na:1089);
 E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
 E0 = E(napos);
-%543
+
 
 aimin = min(ai);
 
