@@ -13,14 +13,6 @@ import StaightLineFit.*
 
 AutomatedApp;
 
-% try
-%     while app.RunScriptButton.Value == 0
-%     pause(0.1)
-%     end
-% catch
-%     warning('Invalid or deleted object.')
-% end
-
 waitfor(AutomatedApp)
 
 disp('Program execution resumed')
@@ -54,19 +46,13 @@ Sigmoid = parameters_values(8);
 
 %% import experimental data
 
-% GaAs_Data = '/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/_21.03.22  13.00.57  20 ms 40/21.03.22  13.00.57  .txt';
-% num = importdata(GaAs_Data);
-% 
-% wavelengths = num(:,2);
-% std_data = num(:,3);
-
-file_0 = "/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/09.05.22  13.14.01  20 ms 15.0/TransmissionData.txt";
+file_0 = "TransmissionData0.txt";
 num_0 = importdata(file_0);
 
 voltages_0 = num_0(:,1); %(1:1089-349,1);
 wavelengths_0 = num_0(:,2); %(1:1089-349,2);
 
-file_1 = "/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/09.05.22  15.30.37  20 ms 15.0/TransmissionData.txt";
+file_1 = "TransmissionData1.txt";
 num_1 = importdata(file_1);
 
 voltages_1 = num_1(:,1);
@@ -93,12 +79,6 @@ voltages_1 = voltages_1-min(voltages_1);
 
 voltages_0 = smooth(voltages_0);
 voltages_1 = smooth(voltages_1);
-
-% correct for voltages
-
-% voltages = smooth(num(:,1));           % smooth
-% V_min = min(voltages).*0.9999;
-% voltages = voltages - abs(V_min);      % nomalise voltages to min 0
 
 %% constants for experiment
 
@@ -145,74 +125,13 @@ alpha = alpha - min(alpha);
 alpha_2 = alpha_2 - min(alpha_2);
 alpha_3 = alpha_3 - min(alpha_3);
 
-% max_alpha_index = find(max(alpha_3) == alpha_3);
-% min_alpha_index = find(min(alpha_3) == alpha_3);
-% 
-% index_diff = (max_alpha_index + min_alpha_index)*0.5;
-% 
-% if rem(index_diff,2) ~= 0
-%     index_diff = index_diff + 0.5;
-% end
-% 
-% mid_alpha = (max(alpha_3)-min(alpha_3))/2;
-% difference_points = abs(mid_alpha - alpha_3);
-% index_mid_alpha = find(min(difference_points)==difference_points);
-% 
-% spliced_alpha = alpha_3(index_mid_alpha-index_diff:index_mid_alpha+index_diff);
-
-% gradient = zeros(1, max(size(energy_ev))-1);
-% gradient(1) = alpha_3(1)./(energy_ev(1));
-% 
-% for i=1:max(size(energy_ev))-1
-%     gradient(i) = (alpha_3(i+1) - alpha_3(i))./(energy_ev(i+1) - energy_ev(i));
-% end
-
 squarealpha = smooth(alpha.^2);
 
 sqrtalpha = smooth(sqrt(alpha));
 
 Log_alpha_GaAs = log10(alpha);
 
-% alpha_check =  (1/x).*log(((1-R_1).^2)./T);
-
-% a = alpha_check - alpha;
-% plot(wavelength,a)
-
-% plot(energy_ev,alpha_check)
-
-% Joules_energy = (h*c)./(wavelength.*10.^(-9));
-% eV_energy = Joules_energy./(1.602176634*10^(-19));
-
-
-plot(energy_ev,Log_alpha_GaAs)
-
-plot(wavelengths_0,voltages_0)
-hold on
-plot(wavelengths_0,voltages_1,'r')
-hold off
-
-
-figure(1)
-plot(wavelengths_0,T,'b*')
-xlabel('Wavelength (nm)','Interpreter','latex')
-ylabel('Transmission Coefficient','Interpreter','latex')
-hold on
-% plot(fittedmodel)
-% plot(y1,x1,'b-')
-
-hold off
-
-figure(2)
-plot(wavelengths_0,voltages_0,'b-')
-hold on
-plot(wavelengths_0,voltages_1,'r-')
-xlabel('Wavelength (nm)','Interpreter','latex')
-ylabel('Voltage','Interpreter','latex')
-
-hold off
-
-
-
+save('TaucPlotting.mat', 'alpha', 'energy_ev', 'squarealpha', 'sqrtalpha', 'Log_alpha_GaAs')
 
 %% conditional plotting - inital is no
 
@@ -222,18 +141,11 @@ if Transmission == 1
     plot(energy_ev, voltages_1)
 end
 
-% if t_lambda == 1
-% 
-%     figure('Name', 'Transmission Graph $(\lambda)$');
-%     plot(wavelengths, voltages_1)
-% end
-
-
 %% calculation - initial is yes
 
 if FastMethod == 1
 
-    file_fastdata = '/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/_21.03.22  13.00.57  20 ms 40/21.03.22  13.00.57  .txt';
+    file_fastdata = 'TransmissionDataFastRun.txt';
     num_fastdata = importdata(file_fastdata);
     
     voltages_fastdata = WavelengthsSystematicCorrection(num_fastdata(:,1));
@@ -273,68 +185,55 @@ if FastMethod == 1
     ComplexError = sqrt(((MyCoeffs(2)/MyCoeffs(1)^2)^2)*m_err^2 + ((1/MyCoeffs(1))^2)*c_err^2);
     SimpleError = BandGap*sqrt((c_err/MyCoeffs(2))^2 + (m_err/MyCoeffs(1))^2);
 
+    disp(['Error = ' , num2str(ComplexError)])
+
 end
-
-
-
-
-% %% extra jake
-% 
-% file = "/Users/harold/Library/CloudStorage/OneDrive-TheUniversityofNottingham/OceanOpticsData/Automated Data/09.05.22  15.30.37  20 ms 15.0/Transmission_Data.txt"
-% num = importdata(file);
-% 
-% voltages = num(:,1)
-% wavelengths = linspace(350,1089,740)'
-% plot(wavelengths, voltages)
-
 %% Sigmoid Plotting
 
 if Sigmoid == 1
-% h = 6.63*10^-34;
-% c = 3*10^8;
 
-a = smooth(alpha);
-
-% Find the min and max alpha values and what position they lie
-amax = max(a);
-amin = min(a);
-
-%From here down 
-
-nmax = find(amax==a);
-
-% Splice excess data beyond 5% of the emmision peak
-perc = 0.5;
-nmaxrange = round(nmax-150);
-
-
-l = length(a);
-ai = a((l-nmaxrange):l,:);
-
-% Finding the energy co-ordinate that is the midpoint between alpha max and
-% alpha min
-ahalf = (amax - amin)/2;
-apos = abs(ahalf-ai);
-aposmin = min(apos);
-napos = find(aposmin==apos);
-
-la = length(ai);
-na = 1089 - la+1;
-Ewave = (na:1089);
-E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
-E0 = E(napos);
-
-
-aimin = min(ai);
-
-naimin = find(aimin == ai);
-naimax = find(amax == ai);
-
-ai = ai';
-
-save('SigmoidData.mat', 'amin', 'amax', 'E0', 'E', 'ai')
-
-SigmoidApp;
+    a = smooth(alpha);
+    
+    % Find the min and max alpha values and what position they lie
+    amax = max(a);
+    amin = min(a);
+    
+    %From here down 
+    
+    nmax = find(amax==a);
+    
+    % Splice excess data beyond 5% of the emmision peak
+    perc = 0.5;
+    nmaxrange = round(nmax-150);
+    
+    
+    l = length(a);
+    ai = a((l-nmaxrange):l,:);
+    
+    % Finding the energy co-ordinate that is the midpoint between alpha max and
+    % alpha min
+    ahalf = (amax - amin)/2;
+    apos = abs(ahalf-ai);
+    aposmin = min(apos);
+    napos = find(aposmin==apos);
+    
+    la = length(ai);
+    na = 1089 - la+1;
+    Ewave = (na:1089);
+    E = h*c./(Ewave.*10^(-9)*1.6*10^-19);
+    E0 = E(napos);
+    
+    
+    aimin = min(ai);
+    
+    naimin = find(aimin == ai);
+    naimax = find(amax == ai);
+    
+    ai = ai';
+    
+    save('SigmoidData.mat', 'amin', 'amax', 'E0', 'E', 'ai')
+    
+    SigmoidApp;
 
 end
 
