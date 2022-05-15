@@ -1,48 +1,48 @@
 %% Optical Abosrption MATLAB code - Analysis
 
-import OpticalAnalysisFunctions.nearestRefraction
-import OpticalAnalysisFunctions.DetectStraightLine
-import OpticalAnalysisFunctions.LongestConsecutive
-import OpticalAnalysisFunctions.DetectLongestStarightLine
+import OpticalAnalysisFunctions.nearestRefraction.*
+import OpticalAnalysisFunctions.DetectStraightLine.*
+import OpticalAnalysisFunctions.LongestConsecutive.*
+import OpticalAnalysisFunctions.DetectLongestStarightLine.*
 
 % loads all the data from the experiment
 
-load('Data/Experimental/GaP - Alda/I02.mat')
-load('Data/Experimental/GaP - Alda/I3.mat')
-load('Data/Experimental/GaP - Alda/lambda.mat')
-load('Data/Experimental/GaP - Alda/low_energies_alpha.mat')
-load('Data/Experimental/GaP - Alda/high_energies_alpha.mat')
+load('I02.mat')
+load('I3.mat')
+load('lambda.mat')
+%load('low_energies_alpha.mat')
+%load('high_energies_alpha.mat')
 
-% loads the refractive index info
-
-RefractiveIndex_GaP = csvimport('Data/Refractive/RefractiveIndexGaP.csv'); 
-RefractiveIndex_GaP(1,:)  = [];  % removing column titles
-
-RefractiveIndexInfo_GaP  = zeros(46,3);
-
-for c=1:3
-    for r=1:46
-        RefractiveIndexInfo_GaP(r,c)  = RefractiveIndex_GaP{r,c};
-    end
-end
-
-L_P  = RefractiveIndexInfo_GaP(:,1).*1000;
-N_P  = RefractiveIndexInfo_GaP(:,2);
-K_P  = RefractiveIndexInfo_GaP(:,3);
-
-figure( 'Name', 'Refractive Index');
-
-plot(L_P,N_P) % real refractive index - n
-hold on
-plot(L_P,K_P) % complex refracive index - ik
-
-title('Refractive Index $200 -- 830 nm$','Interpreter','latex');
-legend('Real refractive index','Complex refractive index','Interpreter','latex')
-
-xlabel( 'Wavelength $/nm$', 'Interpreter', 'latex' );
-ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
-
-hold off
+% % loads the refractive index info
+% 
+% RefractiveIndex_GaP = csvimport('Data/Refractive/RefractiveIndexGaP.csv'); 
+% RefractiveIndex_GaP(1,:)  = [];  % removing column titles
+% 
+% RefractiveIndexInfo_GaP  = zeros(46,3);
+% 
+% for c=1:3
+%     for r=1:46
+%         RefractiveIndexInfo_GaP(r,c)  = RefractiveIndex_GaP{r,c};
+%     end
+% end
+% 
+% L_P  = RefractiveIndexInfo_GaP(:,1).*1000;
+% N_P  = RefractiveIndexInfo_GaP(:,2);
+% K_P  = RefractiveIndexInfo_GaP(:,3);
+% 
+% figure( 'Name', 'Refractive Index');
+% 
+% plot(L_P,N_P) % real refractive index - n
+% hold on
+% plot(L_P,K_P) % complex refracive index - ik
+% 
+% title('Refractive Index $200 -- 830 nm$','Interpreter','latex');
+% legend('Real refractive index','Complex refractive index','Interpreter','latex')
+% 
+% xlabel( 'Wavelength $/nm$', 'Interpreter', 'latex' );
+% ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
+% 
+% hold off
 
 %nearestRefraction(L, Lambda, N);
 
@@ -174,7 +174,7 @@ phonon = (B - A)/2 % phonon energy
 % Ep=(x2-x1)./2;
 %% Huge Test
 
-[x,y] = OpticalAnalysisFunctions.DetectLongestStarightLine(Lambda, T)
+[x,y] = OpticalAnalysisFunctions.DetectLongestStarightLine(Lambda, T, 1)
 plot(Lambda, T)
 hold on
 plot(x, y, '*')

@@ -249,12 +249,12 @@ classdef OpticalAnalysisFunctions
             
             title('Refractive Index $200 - 830 nm$','Interpreter','latex');
             legend('Real refractive index','Complex refractive index', ...
-                'Interpolated Real refractive','Interpolated Complex refractive','Interpreter','latex')
+                'Experimental Real refractive','Experimental Complex refractive','Interpreter','latex')
             
             % legand needs changing
             
-            xlabel( 'Wavelength $(nm)$', 'Interpreter', 'latex' );
-            ylabel( 'Refractive Index ', 'Interpreter', 'Latex' );
+            xlabel( 'Wavelength $/nm$', 'Interpreter', 'latex' );
+            ylabel( 'Refractive Index', 'Interpreter', 'Latex' );
 
         end
 
