@@ -2,7 +2,7 @@ Starting Wavelength,0
 Final Wavelength,1100
 Readings,4
 Steps,1
-Transmission (eV),1
-Fast Method,1
+Transmission (eV),0
+Fast Method,0
 Tauc Plotting,1
-Sigmoid Fit,1
+Sigmoid Fit,0

@@ -1,5 +1,7 @@
 %% Henini Automated 
 
+clear AutomatedApp
+
 % figures no display in LaTeX
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(groot,'defaulttextinterpreter','latex');
@@ -179,8 +181,8 @@ if FastMethod == 1
     MyCoeffs = coeffvalues(fit);
     BandGap = (-MyCoeffs(2))/(MyCoeffs(1));
     var_err = confint(fit);
-    c_err = abs(var_err(1,2)-var_err(2,2))/2;
-    m_err = abs(var_err(1,1)-var_err(2,1))/2;
+    c_err = abs(var_err(1,2)-var_err(2,2))/(2*1.96);
+    m_err = abs(var_err(1,1)-var_err(2,1))/(2*1.96);
     
     ComplexError = sqrt(((MyCoeffs(2)/MyCoeffs(1)^2)^2)*m_err^2 + ((1/MyCoeffs(1))^2)*c_err^2);
     SimpleError = BandGap*sqrt((c_err/MyCoeffs(2))^2 + (m_err/MyCoeffs(1))^2);

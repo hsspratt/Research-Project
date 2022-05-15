@@ -105,18 +105,6 @@ ylim([0 max(voltages)])
 
 disp('finished')
 
-% p = predint(fitresult,wavelengths,0.90,'observation','on')
-% figure( 'Name', 'Band Gap Calculation' );
-% plot(fitresult, wavelengths, voltages,'b-'), hold on, plot(wavelengths, p, 'm--')
-% plot(w_straightline, v_straightline, 'k*');
-% hold on
-% plot(bandgap_wavelength,0, 'k*','MarkerSize', 10);
-% xlabel('Wavelengths $(\lambda)$')
-% ylabel('Voltages (V)')
-% legend('off')
-% xlim([min(wavelengths) 1.7])
-% ylim([0 max(voltages)])
-
 
 
 
