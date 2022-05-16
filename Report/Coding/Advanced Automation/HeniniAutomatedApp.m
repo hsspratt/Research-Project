@@ -53,6 +53,7 @@ num_0 = importdata(file_0);
 
 voltages_0 = num_0(:,1); %(1:1089-349,1);
 wavelengths_0 = num_0(:,2); %(1:1089-349,2);
+std_0 = num_0(:,3);
 
 file_1 = "TransmissionData1.txt";
 num_1 = importdata(file_1);
@@ -244,3 +245,9 @@ end
 if Tauc == 1
     TaucPlotApp
 end
+
+%% Error Analysis
+
+scriptname  = 'Matlab_Error_Analysis.mlx';
+run(scriptname)
+

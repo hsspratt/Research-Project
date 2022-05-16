@@ -121,97 +121,61 @@ disp('finished')
 % ylim([0 max(voltages)])
 % set(gca,'FontSize',16)
 
-figure( 'Name', 'Alpha squared' )
-hold on
-plot(energy_ev, squarealpha)
-plot(x,y)
-plot(x, p, 'm--')
-legend('off')
-xlabel('Energy $(eV)$')
-ylabel('Alpha Squared $(\alpha^2)$')
-set(gca,'FontSize',16)
-xlim([1.3 1.45])
-ylim([0 max(squarealpha)])
-
-load ErrorAnalysis.mat R_1
-load ErrorAnalysis.mat T
-load ErrorAnalysis.mat alpha_1
-load ErrorAnalysis.mat energy_ev
-load ErrorAnalysis.mat voltages_1
-load ErrorAnalysis.mat voltages_0
+% figure( 'Name', 'Alpha squared' )
+% hold on
+% plot(energy_ev, squarealpha)
+% plot(x,y)
+% plot(x, p, 'm--')
+% legend('off')
+% xlabel('Energy $(eV)$')
+% ylabel('Alpha Squared $(\alpha^2)$')
+% set(gca,'FontSize',16)
+% xlim([1.3 1.45])
+% ylim([0 max(squarealpha)])
 
 
-R = R_1;
-x = R;
-y = T;
-z = 0.44*10^(-3); %0.000417;
- 
-dx = (2.*x.^2.*y.^2.*(((8.*x.*y.^2-4.*(1-x).^3)./(2.*sqrt(4.*x.^2.*y.^2+(1-x).^4)) +2.*(1-x))./(2.*x.^2.*y.^2) - (sqrt(4.*x.^2.*y.^2+(1-x).^4)-(1-x).^2)./(x.^3.*y.^2)))./(z.*sqrt(4.*x.^2.*y.^2+(1-x).^4)-(1-x).^2);
 
-dy = (2.*x.^2.*y.^2.*(((2)./(y.*sqrt(4.*x.^2.*y.^2+(1-x).^4)) - (sqrt(4.*x.^2.*y.^2+(1-x).^4)-(1-x).^2)./(x.^2.*y.^3)))./(z.*sqrt(4.*x.^2.*y.^2+(1-x).^4)-(1-x).^2));
-
-dz = ((1)./(z.^2)).*log((sqrt((1-R).^4+4.*T.^2.*R.^2)-(1-R).^2)./(2.*T.^2.*R.^2));
-% error on voltage
-errVoltage = 0.001*ones(size(voltages_1));
-% error on Transmission Coefficient
-%errT = 0.2*ones(size(V0_1))
-errT = T.*(((errVoltage./voltages_0).^2+(errVoltage./voltages_1).^2).^0.5);
-% error on R
-errR = R.*0.05; %0.01;
-errz = 0.01*10^(-3)*ones(size(voltages_1)); %0.01*10^(-3);
-errx = errR; %*ones(size(voltages_1));
-erry = std;
-
-% err_alpha = sqrt((dx.*errx).^(2)+(dy.*erry).^(2)+(dz.*errz).^(2)+(dz.*errz).^(2));
-err_alpha = sqrt((dx.*errx).^(2)+(dy.*erry).^(2)+(dz.*errz).^(2));
-% err_R_alpha = real(err_alpha);
-
-alpha_GaAs = alpha_1;
-eV_energy = energy_ev;
-
-err_B = err_alpha./alpha_GaAs;
-
-figure( 'Name', 'Alpha squared' )
-errorbar(energy_ev,alpha_1,err_alpha)
-
-figure( 'Name', 'Alpha squared' )
-hold on
-errorbar(energy_ev(2:end), squarealpha, err_alpha(2:end)*2, 'vertical')
-plot(x,y, '*')
-plot(x, p, 'm--')
-legend('off')
-xlabel('Energy $(eV)$')
-ylabel('Alpha Squared $(\alpha^2)$')
-set(gca,'FontSize',16)
-xlim([1.3 1.45])
-ylim([0 max(squarealpha)])
-
-
-%%
-
-p = predint(fittedmodel_squared,energy_ev,0.95);
-
-figure( 'Name', 'Alpha squared' )
-hold on
-errorbar(energy_ev,alpha_squared,err_alpha)
-plot(energy_ev, p, 'm--')
-xlabel('Energy $(eV)$')
-ylabel('Alpha Squared $(\alpha^2)$')
-set(gca,'FontSize',16)
-xlim([1.3 1.45])
-ylim([0 max(alpha_squared)])
-
-figure( 'Name', 'Alpha squared LOBF' )
-hold on
-plot(energy_ev, p, 'm--')
-plot(energy_ev(523:544), alpha_squared(523:544),'k*')
-plot(fittedmodel_squared)
-xlabel('Energy $(eV)$')
-ylabel('Alpha Squared $(\alpha^2)$')
-set(gca,'FontSize',16)
-legend('off')
-xlim([min(energy_ev(523:544)) max(energy_ev(523:544))])
-ylim([0 max(alpha_squared(523:544))])
+% figure( 'Name', 'Alpha squared' )
+% errorbar(energy_ev,alpha_1,err_alpha)
+% 
+% figure( 'Name', 'Alpha squared' )
+% hold on
+% errorbar(energy_ev(2:end), squarealpha, err_alpha(2:end)*2, 'vertical')
+% plot(x,y, '*')
+% plot(x, p, 'm--')
+% legend('off')
+% xlabel('Energy $(eV)$')
+% ylabel('Alpha Squared $(\alpha^2)$')
+% set(gca,'FontSize',16)
+% xlim([1.3 1.45])
+% ylim([0 max(squarealpha)])
+% 
+% 
+% %%
+% 
+% p = predint(fittedmodel_squared,energy_ev,0.95);
+% 
+% figure( 'Name', 'Alpha squared' )
+% hold on
+% errorbar(energy_ev,alpha_squared,err_alpha)
+% plot(energy_ev, p, 'm--')
+% xlabel('Energy $(eV)$')
+% ylabel('Alpha Squared $(\alpha^2)$')
+% set(gca,'FontSize',16)
+% xlim([1.3 1.45])
+% ylim([0 max(alpha_squared)])
+% 
+% figure( 'Name', 'Alpha squared LOBF' )
+% hold on
+% plot(energy_ev, p, 'm--')
+% plot(energy_ev(523:544), alpha_squared(523:544),'k*')
+% plot(fittedmodel_squared)
+% xlabel('Energy $(eV)$')
+% ylabel('Alpha Squared $(\alpha^2)$')
+% set(gca,'FontSize',16)
+% legend('off')
+% xlim([min(energy_ev(523:544)) max(energy_ev(523:544))])
+% ylim([0 max(alpha_squared(523:544))])
 
 
   
