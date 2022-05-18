@@ -106,81 +106,97 @@ ylim([0 max(voltages)])
 
 disp('finished')
 
-% StraightLineFit(w_straightline, v_straightline, std_straighline, wavelengths, voltages)
-% 
-% p = predint(fitresult,wavelengths,0.90,'observation','on')
-% figure( 'Name', 'Band Gap Calculation' );
-% plot(fitresult, wavelengths, voltages,'b-'), hold on, plot(wavelengths, p, 'm--')
-% plot(w_straightline, v_straightline, 'k*');
-% hold on
-% plot(bandgap_wavelength,0, 'k*','MarkerSize', 10);
-% xlabel('Energy $(eV)$')
-% ylabel('Voltages (V)')
-% legend('off')
-% xlim([min(wavelengths) 1.7])
-% ylim([0 max(voltages)])
-% set(gca,'FontSize',16)
+p = predint(fitresult,wavelengths,0.90,'observation','on')
+figure( 'Name', 'Band Gap Calculation' );
+plot(fitresult, wavelengths, voltages,'b-'), hold on, plot(wavelengths, p, 'm--')
+plot(w_straightline, v_straightline, 'k*');
+hold on
+plot(bandgap_wavelength,0, 'k*','MarkerSize', 10);
+xlabel('Energy $(eV)$')
+ylabel('Voltages (V)')
+legend('off')
+xlim([min(wavelengths) 1.7])
+ylim([0 max(voltages)])
+set(gca,'FontSize',16)
 
-% figure( 'Name', 'Alpha squared' )
-% hold on
-% plot(energy_ev, squarealpha)
-% plot(x,y)
-% plot(x, p, 'm--')
-% legend('off')
-% xlabel('Energy $(eV)$')
-% ylabel('Alpha Squared $(\alpha^2)$')
-% set(gca,'FontSize',16)
-% xlim([1.3 1.45])
-% ylim([0 max(squarealpha)])
+figure('Name', 'Alpha squared')
+hold on
+plot(energy_ev, squarealpha)
+plot(x,y)
+plot(x, p, 'm--')
+legend('off')
+xlabel('Energy $(eV)$')
+ylabel('Alpha Squared $(\alpha^2)$')
+set(gca,'FontSize',16)
+xlim([1.3 1.45])
+ylim([0 max(squarealpha)])
 
 
 
-% figure( 'Name', 'Alpha squared' )
-% errorbar(energy_ev,alpha_1,err_alpha)
-% 
-% figure( 'Name', 'Alpha squared' )
-% hold on
-% errorbar(energy_ev(2:end), squarealpha, err_alpha(2:end)*2, 'vertical')
-% plot(x,y, '*')
-% plot(x, p, 'm--')
-% legend('off')
-% xlabel('Energy $(eV)$')
-% ylabel('Alpha Squared $(\alpha^2)$')
-% set(gca,'FontSize',16)
-% xlim([1.3 1.45])
-% ylim([0 max(squarealpha)])
-% 
-% 
-% %%
-% 
-% p = predint(fittedmodel_squared,energy_ev,0.95);
-% 
-% figure( 'Name', 'Alpha squared' )
-% hold on
-% errorbar(energy_ev,alpha_squared,err_alpha)
-% plot(energy_ev, p, 'm--')
-% xlabel('Energy $(eV)$')
-% ylabel('Alpha Squared $(\alpha^2)$')
-% set(gca,'FontSize',16)
-% xlim([1.3 1.45])
-% ylim([0 max(alpha_squared)])
-% 
-% figure( 'Name', 'Alpha squared LOBF' )
-% hold on
-% plot(energy_ev, p, 'm--')
-% plot(energy_ev(523:544), alpha_squared(523:544),'k*')
-% plot(fittedmodel_squared)
-% xlabel('Energy $(eV)$')
-% ylabel('Alpha Squared $(\alpha^2)$')
-% set(gca,'FontSize',16)
-% legend('off')
-% xlim([min(energy_ev(523:544)) max(energy_ev(523:544))])
-% ylim([0 max(alpha_squared(523:544))])
+figure( 'Name', 'Alpha squared' )
+errorbar(energy_ev,alpha_1,err_alpha)
+
+figure( 'Name', 'Alpha squared' )
+hold on
+errorbar(energy_ev(2:end), squarealpha, err_alpha(2:end)*2, 'vertical')
+plot(x,y, '*')
+plot(x, p, 'm--')
+legend('off')
+xlabel('Energy $(eV)$')
+ylabel('Alpha Squared $(\alpha^2)$')
+set(gca,'FontSize',16)
+xlim([1.3 1.45])
+ylim([0 max(squarealpha)])
 
 
-  
+%%
+
+p = predint(fittedmodel_squared,energy_ev,0.95);
+
+figure( 'Name', 'Alpha squared' )
+hold on
+errorbar(energy_ev,alpha_squared,err_alpha)
+plot(energy_ev, p, 'm--')
+xlabel('Energy $(eV)$')
+ylabel('Alpha Squared $(\alpha^2)$')
+set(gca,'FontSize',16)
+xlim([1.3 1.45])
+ylim([0 max(alpha_squared)])
+
+figure( 'Name', 'Alpha squared LOBF' )
+hold on
+plot(energy_ev, p, 'm--')
+plot(energy_ev(523:544), alpha_squared(523:544),'k*')
+plot(fittedmodel_squared)
+xlabel('Energy $(eV)$')
+ylabel('Alpha Squared $(\alpha^2)$')
+set(gca,'FontSize',16)
+legend('off')
+xlim([min(energy_ev(523:544)) max(energy_ev(523:544))])
+ylim([0 max(alpha_squared(523:544))])
+
+%%
+
+lw = length(energy_ev);
+wwave = h*c./(energy_ev.*10^(-9)*1.6*10^-19);
+
+for n = 1:lw
+wwaveup = wwave(n) +3;
+wwavelow = wwave(n) - 3;
+
+engup = h*c./(wwaveup.*10^(-9)*1.6*10^-19);
+englow = h*c./(wwavelow.*10^(-9)*1.6*10^-19);
+
+delteng(n) = engup - englow;
+
+end
+
+errbareng = delteng./2;
 
 
+
+
+   
 
 
 
