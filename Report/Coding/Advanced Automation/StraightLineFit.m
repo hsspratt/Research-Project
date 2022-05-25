@@ -166,14 +166,41 @@ ylim([0 max(alpha_squared)])
 figure( 'Name', 'Alpha squared LOBF' )
 hold on
 plot(energy_ev, p, 'm--')
-plot(energy_ev(523:544), alpha_squared(523:544),'k*')
+plot(energy_ev(523:544), squarealpha(523:544),'k*')
 plot(fittedmodel_squared)
 xlabel('Energy $(eV)$')
 ylabel('Alpha Squared $(\alpha^2)$')
 set(gca,'FontSize',16)
 legend('off')
 xlim([min(energy_ev(523:544)) max(energy_ev(523:544))])
-ylim([0 max(alpha_squared(523:544))])
+ylim([0 max(squarealpha(523:544))])
+
+ p = predint(fittedmodel_squared,energy_ev,0.95);
+
+figure( 'Name', 'Alpha squared' )
+hold on
+errorbar(energy_ev(523:544),squarealpha(523:544),err_alpha(523:544),'k*', 'horizontal')
+plot(fittedmodel_squared)
+plot(energy_ev, p, 'm--')
+plot(energy_ev, squarealpha, 'b-')
+xlabel('Energy $(eV)$')
+ylabel('$\alpha^2$ (cm$)^{-2}$')
+set(gca,'FontSize',16)
+xlim([1.3 1.45])
+ylim([0 max(squarealpha)])
+legend('off')
+
+p = predint(fittedmodel_squared,energy_ev,0.95);
+
+figure( 'Name', 'Alpha squared' )
+hold on
+errorbar(energy_ev,squarealpha,2*err_alpha,'k*')
+plot(energy_ev, p, 'm--')
+xlabel('Energy $(eV)$')
+ylabel('$\alpha^2$ $(cm)^{-2}$')
+set(gca,'FontSize',16)
+xlim([1.3 1.45])
+ylim([0 max(squarealpha)])
 
 %%
 

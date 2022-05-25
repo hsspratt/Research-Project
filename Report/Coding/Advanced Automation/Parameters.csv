@@ -3,6 +3,6 @@ Final Wavelength,1100
 Readings,4
 Steps,1
 Transmission (eV),0
-Fast Method,1
-Tauc Plotting,0
+Fast Method,0
+Tauc Plotting,1
 Sigmoid Fit,0
