@@ -2,7 +2,11 @@
 %matplotlib widget
 import numpy as np
 import matplotlib.pyplot as plt
+font = {'size'   : 14}
+
+plt.rc('font', **font)
 plt.rcParams['text.usetex'] = True
+
 
 E_g = 1.42
 P_e = np.linspace(E_g, 1.65,100)
@@ -46,3 +50,4 @@ ax.set_aspect(1./ax.get_data_ratio())
 
 plt.savefig("Theoretical_Vs_Experimental.svg", format = 'svg', dpi=1200)
 # %%
+
